@@ -1,0 +1,53 @@
+@keyframes spinner-circle {
+    0% {
+      transform: translate3d(-50%, -50%, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    }
+  }
+  @keyframes image {
+    0% {
+      transform: translate3d(-50%, -50%, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    }
+  }
+  .img-spiner::before {
+    animation: 2.5s linear infinite image;
+    animation-play-state: inherit;
+    border-radius: 50%;
+    content: url("https://api.iconify.design/emojione-v1/delivery-truck.svg?width=64&height=64&flip=horizontal");
+    height: 230px;
+    width: 230px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate3d(-50%, -50%, 0);
+    will-change: transform;
+  }
+  .circle::before {
+    animation: 2.5s linear infinite spinner-circle;
+    animation-play-state: inherit;
+    border: solid 5px #cfd0d15e;
+    border-top-color: #1c87c9;
+    border-radius: 50%;
+    content: "";
+    height: 130px;
+    width: 130px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    will-change: transform;
+  }
+  .loading-text{
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+  }
+  .c-spiner-holder {
+    position: relative;
+  }
