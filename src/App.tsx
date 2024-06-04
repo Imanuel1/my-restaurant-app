@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate, HashRouter } from "react-router-dom";
 import "./App.css";
 import { UserProvider } from "./context/UserContext";
-// import NavigationBar from "./components/navigationBar/navigationBar";
+import NavigationBar from "./components/navigationBar/navigationBar";
 import { User } from "./interface/loggedUser";
 import { userRoutes } from "./routes/routes.service";
 import { LoadingPage } from "./pages/LoadingPage/LoadingPage";
@@ -28,7 +28,7 @@ const App = () => {
   return (
     <UserProvider>
       <HashRouter>
-        {/* <NavigationBar /> */}
+        <NavigationBar />
         <Routes>
           <Route
             path="/"
