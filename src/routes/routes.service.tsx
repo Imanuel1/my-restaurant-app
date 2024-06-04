@@ -1,8 +1,14 @@
+import {
+  ConfettiEmoji,
+  PaymentApproveButton,
+} from "../components/animations/ConfettiEmoji/ConfettiEmoji";
+
 export const About: React.FC = () => {
   return (
     <div>
       <h1>About Us</h1>
       <p>Welcome to our restaurant!</p>
+      <PaymentApproveButton text="אישור תשלום" style={{}} />
     </div>
   );
 };

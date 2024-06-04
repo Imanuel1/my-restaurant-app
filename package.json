@@ -1,7 +1,8 @@
 {
   "name": "my-restaurant-app",
   "version": "0.1.0",
-  "private": true,
+  "homepage": "https://imanuel1.github.io/my-restaurant-app/",
+  "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -10,8 +11,10 @@
     "@types/node": "^16.18.97",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "canvas-confetti": "^1.9.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-icon-cloud": "^4.1.4",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
@@ -44,6 +47,11 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.1.1"
+    "@types/canvas-confetti": "^1.6.4",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.2.10",
+    "gh-pages": "^6.1.1",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss": "^3.4.3"
   }
 }
