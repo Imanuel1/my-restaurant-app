@@ -26,20 +26,22 @@ const App = () => {
   }
 
   return (
-    <UserProvider>
-      <HashRouter>
-        <NavigationBar />
-        <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={routes.defaultRoute} replace />}
-          />
-          {routes.pages.map((page, index) => (
-            <Route key={index} path={page.path} element={page.element} />
-          ))}
-        </Routes>
-      </HashRouter>
-    </UserProvider>
+    <div className="app-container">
+      <UserProvider>
+        <HashRouter>
+          <NavigationBar />
+          <Routes>
+            <Route
+              path="/"
+              element={<Navigate to={routes.defaultRoute} replace />}
+            />
+            {routes.pages.map((page, index) => (
+              <Route key={index} path={page.path} element={page.element} />
+            ))}
+          </Routes>
+        </HashRouter>
+      </UserProvider>
+    </div>
   );
 };
 
