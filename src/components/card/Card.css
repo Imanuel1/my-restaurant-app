@@ -21,7 +21,9 @@
   width: 10.875rem;
   overflow: hidden;
   border-radius: 0.5rem;
-  background-image: url(https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg);
+  background-image: url(../../assets/mainTopics/placeholder-image.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .c-card-container {

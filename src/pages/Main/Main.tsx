@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import "./Main.css";
 import Card from "../../components/card/Card";
 
@@ -13,8 +13,16 @@ const Main = ({
     ראשונות: [
       { title: "string", description: "string", price: 33 },
       { title: "string11", description: "string111", price: 331 },
+      { title: "string", description: "string", price: 33 },
+      { title: "string11", description: "string111", price: 331 },
+      { title: "string", description: "string", price: 33 },
+      { title: "string11", description: "string111", price: 331 },
     ],
   };
+
+  useEffect(() => {
+    //request for dishes of the type of topic
+  }, []);
 
   return (
     <div className="c-main-page">

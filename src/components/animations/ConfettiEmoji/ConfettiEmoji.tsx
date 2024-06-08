@@ -1,5 +1,6 @@
 import { CSSProperties } from "react";
 import { Confetti } from "../../magicui/confetti";
+import ButtonX from "../../buttonCustom/ButtonX";
 
 export function ConfettiEmoji() {
   const handleClick = () => {
@@ -98,7 +99,13 @@ export function PaymentApproveButton({
 
   return (
     <div className="relative justify-center">
-      <button style={style} onClick={handleClick}>{text}</button>
+      <ButtonX
+        text={text}
+        Icon={{ isButton: true, IconName: undefined }}
+        style={style}
+        type="success"
+        onClick={handleClick}
+      />
     </div>
   );
 }

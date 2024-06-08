@@ -1,5 +1,6 @@
 .c-button-container {
-    background-color: var(--cb-color-bg-surface-brand);
-    color: var(--cb-color-text-brand);
-    transition: background-color 150ms linear 0s, color 150ms linear 0s;
+  background-color: var(--cb-color-bg-surface-brand);
+  color: var(--cb-color-text-brand);
+  transition: background-color 150ms linear 0s, color 150ms linear 0s;
+  text-align: center;
 }
