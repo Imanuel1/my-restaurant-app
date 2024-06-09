@@ -144,4 +144,5 @@ export default function Order() {
   );
 }
 
+//statuses of order: send to kitchen -> in progress -> finished 
 // <Stack direction="row" spacing={1}>
