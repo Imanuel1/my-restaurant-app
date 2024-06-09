@@ -10,6 +10,8 @@ import desserts from "../assets/mainTopics/dessert.jpg";
 import drinks from "../assets/mainTopics/drinks.jpg";
 import Order from "../pages/Order/Order";
 import Payment from "../pages/Payment/Payment";
+import LoginForm from "../pages/Login/Login";
+import SignupForm from "../pages/Signup/Signup";
 
 // MyOrder.tsx
 {
@@ -112,6 +114,16 @@ export const userRoutes = {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
         element: <Payment />,
+      },
+      {
+        path: "/login",
+        label: "אפליקציית שדרות היסע",
+        element: <LoginForm />,
+      },
+      {
+        path: "/signup",
+        label: "אפליקציית שדרות היסע",
+        element: <SignupForm />,
       },
     ],
   },
