@@ -12,6 +12,7 @@ import {
 import "./Signup.css";
 import { UserContext } from "../../context/UserContext";
 import { Link } from "react-router-dom";
+import Parse from "parse";
 import { useNavigate } from "react-router-dom";
 
 interface SignupFormData {
@@ -65,7 +66,7 @@ const SignupForm: React.FC = () => {
 
   if (submitted) {
     navigate("/menu"); // Replace "/" with your actual home page route
-    <Link to="/menu" />;
+    // <Link to="/menu" />;
   }
 
   return (

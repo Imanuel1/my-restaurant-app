@@ -6,11 +6,13 @@ import NavigationBar from "./components/navigationBar/navigationBar";
 import { User } from "./interface/loggedUser";
 import { userRoutes } from "./routes/routes.service";
 import { LoadingPage } from "./pages/LoadingPage/LoadingPage";
+import Parse from "parse";
+import { createUserWithRole } from "./parse/signup";
 
 const App = () => {
-  // const [activeUser, setActiveUser] = useState(Parse.User.current() ? new UserModel(Parse.User.current()) : null);
+  const [currentUser, setCurrentUser] = useState(Parse.User.current() || null);
 
-  const [currentUser, setCurrentUser] = React.useState<User | null>(null); // Assuming a User interface
+  // const [currentUser, setCurrentUser] = React.useState<User | null>(null); // Assuming a User interface
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -18,12 +20,15 @@ const App = () => {
 
     return () => clearTimeout(loadingTimer);
   }, []);
-  // ... (other code in App.tsx)
-  const routes = currentUser
-    ? userRoutes[currentUser?.type]
+
+  const routes = (currentUser as any)?.role
+    ? userRoutes[(currentUser as any)?.role as keyof typeof userRoutes]
     : userRoutes["guest"];
 
   if (isLoading) {
+    createUserWithRole("iman", "admin@gmail.com", "Aa123456!", {
+      role: "manager",
+    });
     return <LoadingPage />;
   }
 

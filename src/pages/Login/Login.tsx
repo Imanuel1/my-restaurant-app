@@ -49,7 +49,7 @@ const LoginForm: React.FC = () => {
 
   if (submitted) {
     navigate("/menu"); // Replace "/" with your actual home page route
-    <Link to="/" />;
+    // <Link to="/" />;
   }
 
   return (
