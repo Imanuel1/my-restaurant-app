@@ -83,15 +83,18 @@
 
 // export default NavigationBar;
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { useMediaQuery } from "react-responsive";
 import { UserContext } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import "./navigationBar.css";
 
 // import "./NavbarMobile.css";
-const NavbarHook = () => {
+const NavbarHook = ({}) => {
+  const { activeUser, logout } = useContext(UserContext);
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: "1150px" });
   const toggleMenu = () => {
@@ -102,9 +105,9 @@ const NavbarHook = () => {
       setIsMenuOpen(false);
     }
   };
+
   const renderNavLinks = () => {
     // TODO:
-    //   const { currentUser } = useContext(UserContext);
     // currentUser?.role === "manager" && (
     const listClassName = isMobile ? "nav__list" : "nav__list__web";
     const linkClassName = "nav__link";
@@ -152,24 +155,42 @@ const NavbarHook = () => {
             תשלום
           </NavLink>
         </li>
-        <li className="login-li">
-          <NavLink
-            to="/login"
-            className={`${linkClassName} ${buttonClassName}`}
-            onClick={closeMobileMenu}
-          >
-            התחברות
-          </NavLink>
-        </li>
-        <li className="signup-li">
-          <NavLink
-            to="/signup"
-            className={`${linkClassName} ${buttonClassName}`}
-            onClick={closeMobileMenu}
-          >
-            הרשמה
-          </NavLink>
-        </li>
+        {activeUser ? (
+          <li className="logout-li">
+            <NavLink
+              to="/logout"
+              className={`${linkClassName} ${buttonClassName}`}
+              onClick={() => {
+                logout();
+                navigate("/"); // Replace "/" with your actual home page route
+                closeMobileMenu();
+              }}
+            >
+              התנתקות
+            </NavLink>
+          </li>
+        ) : (
+          <>
+            <li className="login-li">
+              <NavLink
+                to="/login"
+                className={`${linkClassName} ${buttonClassName}`}
+                onClick={closeMobileMenu}
+              >
+                התחברות
+              </NavLink>
+            </li>
+            <li className="signup-li">
+              <NavLink
+                to="/signup"
+                className={`${linkClassName} ${buttonClassName}`}
+                onClick={closeMobileMenu}
+              >
+                הרשמה
+              </NavLink>
+            </li>
+          </>
+        )}
       </ul>
     );
   };

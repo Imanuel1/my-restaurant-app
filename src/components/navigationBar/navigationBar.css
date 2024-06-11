@@ -22,6 +22,7 @@
   transition: color 0.4s;
   font-size: var(--h2-font-size);
   font-family: var(--second-font);
+  margin-left: 16px;
 }
 
 .nav__toggle,
@@ -89,6 +90,9 @@
 }
 
 @media screen and (max-width: 1150px) {
+  #root > .app-container {
+    width: 100%;
+  }
   .nav__menu {
     position: fixed;
     top: -5px;
@@ -102,7 +106,8 @@
     transition: right 0.4s;
   }
   .nav__menu.show-menu {
-    right: 67%;
+    left: 0;
+    transform: translateX(300px);
     box-shadow: var(--cb-shadow-medium);
   }
   .nav__list {
@@ -112,6 +117,10 @@
     margin-top: auto;
   }
   .signup-li {
+    margin-bottom: 20px;
+  }
+  .logout-li {
+    margin-top: auto;
     margin-bottom: 20px;
   }
 }
@@ -133,6 +142,9 @@
     width: 100%;
   }
   .nav__list__web .login-li {
+    margin-right: auto;
+  }
+  .nav__list__web .logout-li {
     margin-right: auto;
   }
 }

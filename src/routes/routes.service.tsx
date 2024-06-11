@@ -2,6 +2,7 @@ import {
   ConfettiEmoji,
   PaymentApproveButton,
 } from "../components/animations/ConfettiEmoji/ConfettiEmoji";
+import { useContext } from "react";
 import About from "../pages/About/About";
 import Main from "../pages/Main/Main";
 import firstFood from "../assets/mainTopics/firstFood.jpg";
@@ -56,10 +57,28 @@ export const userRoutes = {
         element: <About />,
       },
       {
-        path: "/order",
-        label: "אפליקציית שדרות תספוקת",
-        element: <MyOrder />,
+        path: "/menu",
+        label: "אפליקציית שדרות היסע",
+        element: <Main dishType={foodType} />,
       },
+      {
+        path: "/my-order",
+        label: "אפליקציית שדרות היסע",
+        element: <Order />,
+      },
+      {
+        path: "/payment",
+        label: "אפליקציית שדרות היסע",
+        element: <Payment />,
+      },
+      // {
+      //   path: "/logout",
+      //   label: "אפליקציית שדרות היסע",
+      //   element: () => {
+      //     logout();
+      //     return <></>;
+      //   },
+      // },
     ],
   },
   worker: {
@@ -71,10 +90,28 @@ export const userRoutes = {
         element: <About />,
       },
       {
-        path: "/order",
-        label: "אפליקציית שדרות תספוקת",
-        element: <MyOrder />,
+        path: "/menu",
+        label: "אפליקציית שדרות היסע",
+        element: <Main dishType={foodType} />,
       },
+      {
+        path: "/my-order",
+        label: "אפליקציית שדרות היסע",
+        element: <Order />,
+      },
+      {
+        path: "/payment",
+        label: "אפליקציית שדרות היסע",
+        element: <Payment />,
+      },
+      // {
+      //   path: "/logout",
+      //   label: "אפליקציית שדרות היסע",
+      //   element: () => {
+      //     logout();
+      //     return <></>;
+      //   },
+      // },
     ],
   },
   client: {
@@ -86,10 +123,28 @@ export const userRoutes = {
         element: <About />,
       },
       {
-        path: "/order",
-        label: "אפליקציית שדרות תספוקת",
-        element: <MyOrder />,
+        path: "/menu",
+        label: "אפליקציית שדרות היסע",
+        element: <Main dishType={foodType} />,
       },
+      {
+        path: "/my-order",
+        label: "אפליקציית שדרות היסע",
+        element: <Order />,
+      },
+      {
+        path: "/payment",
+        label: "אפליקציית שדרות היסע",
+        element: <Payment />,
+      },
+      // {
+      //   path: "/logout",
+      //   label: "אפליקציית שדרות היסע",
+      //   element: () => {
+      //     logout();
+      //     return <></>;
+      //   },
+      // },
     ],
   },
   guest: {

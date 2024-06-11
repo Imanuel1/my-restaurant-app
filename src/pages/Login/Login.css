@@ -1,3 +1,20 @@
-.errorInput {
-    border: 0.1rem solid #DD340E;
+/* .errorInput {
+  border: 0.1rem solid #dd340e;
+} */
+
+.c-login-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.c-login-container > h1 {
+  margin-bottom: 1.5rem;
+}
+
+.c-login-container > div {
+  margin-bottom: 0.5rem;
 }

@@ -1,4 +1,12 @@
 import React, { createContext, useState, FC } from "react";
+import Parse from "parse";
+
+import {
+  parseLogin,
+  parseLogout,
+  parseSignUp,
+  createUserWithRole,
+} from "../parse/signup";
 
 interface User {
   username?: string;
@@ -19,10 +27,12 @@ const UserContext = createContext({
     password: string;
   }) => {},
   login: (email: string, password: string) => {},
+  activeUser: {} as Parse.User<Parse.Attributes> | null,
 });
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [activeUser, setActiveUser] = useState<User | null>(null);
+  const [activeUser, setActiveUser] =
+    useState<Parse.User<Parse.Attributes> | null>(Parse.User.current() || null);
 
   // Update currentUser based on your authentication logic (e.g., login, logout)
   const editUser = ({
@@ -55,7 +65,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     //create user with parse
     //get feedback
   };
-  const signup = ({
+  const signup = async ({
     email,
     name,
     lastName,
@@ -66,20 +76,29 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     lastName: string;
     password: string;
   }) => {
+    const newUser = await parseSignUp(name, email, password);
+    console.log("this is new user :", newUser);
+
+    setActiveUser(newUser);
+    // window.location.replace("/menu");
     //signup with parse
     //use login
     //get from parse the username and role
   };
-  const login = (email: string, password: string) => {
-    //login with parse
-    //get from parse the username and role -> and set in local storage
+
+  const login = async (email: string, password: string) => {
+    const loggedIn = await parseLogin(email, password);
+    console.log("this is loggedIn user :", loggedIn);
+    setActiveUser(loggedIn);
+    // window.location.replace("/menu");
   };
 
-  const logout = () => {
-    // setActiveUser(null);
-    // Parse.User.logOut();
-    //remove from local storage
-    //redirect -> window
+  const logout = async () => {
+    const isLogout = await parseLogout();
+    if (isLogout) {
+      setActiveUser(null);
+      // window.location.replace("/menu");
+    }
   };
 
   //reset password

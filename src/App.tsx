@@ -8,6 +8,8 @@ import { userRoutes } from "./routes/routes.service";
 import { LoadingPage } from "./pages/LoadingPage/LoadingPage";
 
 const App = () => {
+  // const [activeUser, setActiveUser] = useState(Parse.User.current() ? new UserModel(Parse.User.current()) : null);
+
   const [currentUser, setCurrentUser] = React.useState<User | null>(null); // Assuming a User interface
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
