@@ -1,28 +1,27 @@
 import React, { FC, useState, useEffect } from "react";
 import "./Main.css";
 import Card from "../../components/card/Card";
+import { MenuType, getMenusByType } from "../../parse/menu";
 
 const Main = ({
   dishType,
 }: {
-  dishType: { image: string; name: string }[];
+  dishType: { image: string; label: string; value: MenuType }[];
 }) => {
-  const [selectType, setSelectType] = useState<keyof typeof list>();
-
-  const list = {
-    ראשונות: [
-      { title: "string", description: "string", price: 33 },
-      { title: "string11", description: "string111", price: 331 },
-      { title: "string", description: "string", price: 33 },
-      { title: "string11", description: "string111", price: 331 },
-      { title: "string", description: "string", price: 33 },
-      { title: "string11", description: "string111", price: 331 },
-    ],
-  };
+  const [selectType, setSelectType] = useState<MenuType>();
+  const [menusByType, setMenusByType] = useState<Parse.Object[] | null>(null);
 
   useEffect(() => {
-    //request for dishes of the type of topic
-  }, []);
+    if (selectType) {
+      //request for menus of the type of topic
+      getMenusByType(selectType)
+        .then((res) => {
+          console.log("getMenusByType res :", res);
+          setMenusByType(res);
+        })
+        .catch((err) => console.error("error while getMenusByType: ", err));
+    }
+  }, [selectType]);
 
   return (
     <div className="c-main-page">
@@ -30,14 +29,21 @@ const Main = ({
         <div>
           <span className="type-title">{selectType}</span>
           <div className="list-container">
-            {list[selectType].map(({ title, description, price }, index) => (
-              <Card
-                key={index}
-                title={title}
-                description={description}
-                price={price}
-              />
-            ))}
+            {menusByType &&
+              menusByType.map(
+                (
+                  { attributes: { name, description, price, image } },
+                  index
+                ) => (
+                  <Card
+                    key={index}
+                    title={name}
+                    description={description}
+                    price={price}
+                    image={image}
+                  />
+                )
+              )}
           </div>
         </div>
       ) : (
@@ -48,10 +54,10 @@ const Main = ({
             style={{
               backgroundImage: `url(${type.image})`,
             }}
-            onClick={() => setSelectType(type.name as keyof typeof list)}
+            onClick={() => setSelectType(type.value)}
           >
             <div className="card-dark-background">
-              <span>{type.name}</span>
+              <span>{type.label}</span>
             </div>
           </div>
         ))

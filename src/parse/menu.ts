@@ -25,7 +25,7 @@ export const createNewMenu = async (
 
     await menu.save();
     // Success
-    alert("Success! menu created!");
+    // alert("Success! menu created!");
 
     return true;
   } catch (error: any) {
@@ -34,14 +34,14 @@ export const createNewMenu = async (
     return false;
   }
 };
-export const getMenuesByType = async (type: MenuType) => {
+export const getMenusByType = async (type: MenuType) => {
   try {
     const menuQuery: Parse.Query = new Parse.Query("Menu");
     menuQuery.equalTo("type", type);
     const menuList: Parse.Object[] = await menuQuery.find();
 
     // Success
-    alert("Success! get menu list!");
+    // alert("Success! get menu list!");
 
     return menuList;
   } catch (error: any) {
@@ -51,13 +51,14 @@ export const getMenuesByType = async (type: MenuType) => {
   }
 };
 
-export const getAllMenues = async () => {
+export const getAllMenus = async () => {
   try {
     const menuQuery: Parse.Query = new Parse.Query("Menu");
     const menuList: Parse.Object[] = await menuQuery.find();
 
     // Success
-    alert("Success! get all menu list!");
+    // alert("Success! get all menu list!");
+    console.log("getAllMenus", menuList);
 
     return menuList;
   } catch (error: any) {
@@ -93,7 +94,8 @@ export const updateMenu = async ({
 
     await menu.save();
     // Success
-    alert("Success! get menu list!");
+    // alert("Success! get menu list!");
+    
 
     return menu;
   } catch (error: any) {

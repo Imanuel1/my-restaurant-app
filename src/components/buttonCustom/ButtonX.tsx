@@ -9,6 +9,8 @@ interface props {
   variant?: "text" | "contained" | "outlined";
   onClick?: (value: string) => void;
   style?: CSSProperties;
+  disabled?: boolean;
+  children?: React.ReactNode;
 }
 
 const ButtonX: FC<props> = ({
@@ -18,6 +20,8 @@ const ButtonX: FC<props> = ({
   variant = "contained",
   onClick = () => {},
   style = {},
+  disabled = false,
+  children = <></>,
 }) => {
   if (!Icon?.isButton) {
     return (
@@ -26,8 +30,12 @@ const ButtonX: FC<props> = ({
         style={{ ...style }}
         onClick={(e) => onClick(e.currentTarget.value)}
         color={type}
+        disabled={disabled}
       >
-        {Icon?.IconName ? <Icon.IconName /> : <></>}
+        <>
+          {Icon?.IconName ? <Icon.IconName /> : <></>}
+          {children}
+        </>
       </IconButton>
     );
   }
@@ -42,8 +50,12 @@ const ButtonX: FC<props> = ({
         startIcon={Icon.IconName ? <Icon.IconName /> : <></>}
         onClick={(e) => onClick(e.currentTarget.value)}
         color={type}
+        disabled={disabled}
       >
-        {text}
+        <div>
+          {text}
+          {children}
+        </div>
       </Button>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -64,10 +64,11 @@ const SignupForm: React.FC = () => {
     console.log(data); // Replace with your form submission logic
   };
 
-  if (submitted) {
-    navigate("/menu"); // Replace "/" with your actual home page route
-    // <Link to="/menu" />;
-  }
+  useEffect(() => {
+    if (submitted) {
+      navigate("/menu"); // Replace "/" with your actual home page route
+    }
+  }, [submitted]);
 
   return (
     <form className="c-signup-container" onSubmit={handleSubmit(onSubmit)}>

@@ -26,11 +26,23 @@ const Card: FC<props> = ({
           <span className="card-description">{description}</span>
           <span className="card-price">{`${price} ₪`}</span>
         </div>
-        <div className="background-container">
+        <div
+          className="background-container"
+          style={image ? { backgroundImage: `url(${image})` } : {}}
+        >
           <ButtonX Icon={{ isButton: false, IconName: AddCircleIcon }} />
         </div>
       </div>
-      {isOpenModal ? <PopupModal /> : null}
+      {isOpenModal ? (
+        <PopupModal
+          open={isOpenModal}
+          setOpen={setIsOpenModal}
+          title={title}
+          description={description}
+          price={price}
+          image={image}
+        />
+      ) : null}
     </>
   );
 };

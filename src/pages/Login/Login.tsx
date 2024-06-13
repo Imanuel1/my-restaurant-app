@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -47,10 +47,11 @@ const LoginForm: React.FC = () => {
     console.log(data); // Replace with your login logic (e.g., API call)
   };
 
-  if (submitted) {
-    navigate("/menu"); // Replace "/" with your actual home page route
-    // <Link to="/" />;
-  }
+  useEffect(() => {
+    if (submitted) {
+      navigate("/menu"); // Replace "/" with your actual home page route
+    }
+  }, [submitted]);
 
   return (
     <form className="c-login-container" onSubmit={handleSubmit(onSubmit)}>

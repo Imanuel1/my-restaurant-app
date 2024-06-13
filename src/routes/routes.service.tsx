@@ -13,6 +13,8 @@ import Order from "../pages/Order/Order";
 import Payment from "../pages/Payment/Payment";
 import LoginForm from "../pages/Login/Login";
 import SignupForm from "../pages/Signup/Signup";
+import MenuList from "../pages/MenuList/MenuList";
+import { MenuType } from "../parse/menu";
 
 // MyOrder.tsx
 {
@@ -30,19 +32,23 @@ export const MyOrder: React.FC = () => {
 
 const foodType = [
   {
-    name: "ראשונות",
+    label: "ראשונות",
+    value: MenuType.FIRST,
     image: firstFood,
   },
   {
-    name: "עקריות",
+    label: "עקריות",
+    value: MenuType.MAIN,
     image: mainFood,
   },
   {
-    name: "קינוחים",
+    label: "קינוחים",
+    value: MenuType.DESSERTS,
     image: desserts,
   },
   {
-    name: "משקאות",
+    label: "משקאות",
+    value: MenuType.DRINKS,
     image: drinks,
   },
 ];
@@ -70,6 +76,11 @@ export const userRoutes = {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
         element: <Payment />,
+      },
+      {
+        path: "/allMenus",
+        label: "אפליקציית שדרות היסע",
+        element: <MenuList />,
       },
       // {
       //   path: "/logout",

@@ -90,6 +90,7 @@ import { useMediaQuery } from "react-responsive";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import "./navigationBar.css";
+import { MenuType } from "../../parse/menu";
 
 // import "./NavbarMobile.css";
 const NavbarHook = ({}) => {
@@ -105,6 +106,11 @@ const NavbarHook = ({}) => {
       setIsMenuOpen(false);
     }
   };
+  const translatonUserRole = {
+    manager: "מנהל",
+    worker: "עובד",
+    client: "לקוח",
+  };
 
   const renderNavLinks = () => {
     // TODO:
@@ -115,17 +121,17 @@ const NavbarHook = ({}) => {
     return (
       <ul className={listClassName}>
         <li>
-          <NavLink to="/" className={linkClassName} onClick={closeMobileMenu}>
-            ראשי
-          </NavLink>
-        </li>
-        <li>
           <NavLink
             to="/about"
             className={linkClassName}
             onClick={closeMobileMenu}
           >
             אודות
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/" className={linkClassName} onClick={closeMobileMenu}>
+            ראשי
           </NavLink>
         </li>
         <li>
@@ -155,8 +161,24 @@ const NavbarHook = ({}) => {
             תשלום
           </NavLink>
         </li>
+        {activeUser?.attributes?.role === "manager" ? (
+          <li>
+            <NavLink
+              to="/allMenus"
+              className={linkClassName}
+              onClick={closeMobileMenu}
+            >
+              תפריטי המסעדה
+            </NavLink>
+          </li>
+        ) : null}
         {activeUser ? (
           <li className="logout-li">
+            <span style={{ marginLeft: 7 }}>{`ברוך הבא ${
+              translatonUserRole[
+                activeUser.attributes?.role as keyof typeof translatonUserRole
+              ]
+            } ${activeUser.getUsername()}`}</span>
             <NavLink
               to="/logout"
               className={`${linkClassName} ${buttonClassName}`}
