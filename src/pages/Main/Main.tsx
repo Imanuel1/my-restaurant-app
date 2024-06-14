@@ -8,13 +8,17 @@ const Main = ({
 }: {
   dishType: { image: string; label: string; value: MenuType }[];
 }) => {
-  const [selectType, setSelectType] = useState<MenuType>();
+  const [selectType, setSelectType] = useState<{
+    image: string;
+    label: string;
+    value: MenuType;
+  }>();
   const [menusByType, setMenusByType] = useState<Parse.Object[] | null>(null);
 
   useEffect(() => {
     if (selectType) {
       //request for menus of the type of topic
-      getMenusByType(selectType)
+      getMenusByType(selectType.value)
         .then((res) => {
           console.log("getMenusByType res :", res);
           setMenusByType(res);
@@ -27,16 +31,17 @@ const Main = ({
     <div className="c-main-page">
       {selectType ? (
         <div>
-          <span className="type-title">{selectType}</span>
+          <span className="type-title">{selectType.label}</span>
           <div className="list-container">
             {menusByType &&
               menusByType.map(
                 (
-                  { attributes: { name, description, price, image } },
+                  { attributes: { name, description, price, image }, id },
                   index
                 ) => (
                   <Card
                     key={index}
+                    id={id}
                     title={name}
                     description={description}
                     price={price}
@@ -54,7 +59,7 @@ const Main = ({
             style={{
               backgroundImage: `url(${type.image})`,
             }}
-            onClick={() => setSelectType(type.value)}
+            onClick={() => setSelectType(type)}
           >
             <div className="card-dark-background">
               <span>{type.label}</span>

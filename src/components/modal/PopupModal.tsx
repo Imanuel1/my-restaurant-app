@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useContext } from "react";
 import { Modal, Box, Button } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import AddIcon from "@mui/icons-material/Add";
@@ -8,10 +8,13 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import "./PopupModal.css";
 import ButtonX from "../buttonCustom/ButtonX";
+import { OrderContext } from "../../context/OrderContext";
+import { UserContext } from "../../context/UserContext";
 
 interface props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -21,17 +24,46 @@ interface props {
 const PopupModal: FC<props> = ({
   open,
   setOpen,
+  id,
   title,
   description,
   price,
   image,
 }) => {
   const [units, setUnits] = useState(1);
+  const [comments, setComments] = useState("");
+  const { setOrder, currentOrder } = useContext(OrderContext);
+  const { activeUser } = useContext(UserContext);
 
   const handleClose = () => setOpen(false);
 
   const handleAddOrder = () => {
-    
+    const orderData: {
+      menuItems: {
+        menuId: string;
+        units: number;
+        cost: number;
+        comments: string;
+        title: string;
+        description: string;
+        image: string;
+      }[];
+      userId?: string;
+    } = {
+      userId: activeUser ? activeUser.id : undefined,
+      menuItems: [{ menuId: id, cost: price * units, units, comments, title, description, image }],
+    };
+    if (currentOrder) {
+      orderData.userId = activeUser?.id;
+      orderData.menuItems = [...orderData.menuItems, ...currentOrder.menuItems];
+
+      //TODO: if already has the same id in the same array - use reduce
+      setOrder(orderData);
+    } else {
+      setOrder(orderData);
+    }
+
+    handleClose();
   };
 
   const style = {
@@ -77,6 +109,11 @@ const PopupModal: FC<props> = ({
           <Divider style={{ margin: "10px 0px" }} />
 
           <TextField
+            value={comments}
+            onChange={(e) => {
+              setComments(e.target.value);
+              console.log("on change e:", e.target.value);
+            }}
             minRows={2}
             maxRows={5}
             id="outlined-basic"
@@ -112,6 +149,7 @@ const PopupModal: FC<props> = ({
             <h3>להוסיף לסל</h3>
             <span>{`${price * units}₪`}</span>
             {/* text-decoration: line-through */}
+            {/* if client has birthday!!! */}
           </ButtonX>
         </div>
       </Box>

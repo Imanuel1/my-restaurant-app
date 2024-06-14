@@ -7,6 +7,9 @@
   display: flex;
   flex-direction: column;
 }
+.item-container > .MuiDivider-root {
+  width: 100%;
+}
 
 .c-orders-container > ul {
   box-shadow: var(--cb-shadow-xsmall);
@@ -30,21 +33,16 @@
   align-items: center;
 }
 
-.item-container > .MuiListItem-root > .MuiListItemText-root {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-right: 16px;
+.MuiCollapse-root {
+  padding: 10px;
 }
-
-.item-container
-  > .MuiListItem-root
-  > .MuiListItemSecondaryAction-root
-  > .MuiListItemAvatar-root {
+.manager-order-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.manager-order-item > .MuiListItemAvatar-root {
   justify-content: flex-start;
 }
 
-.item-container > .MuiListItem-root > .MuiListItemText-root > p {
-  display: flex;
-  align-items: flex-start;
-}
+/* .MuiListItemText-root > p >; */

@@ -4,6 +4,7 @@ import ButtonX from "../buttonCustom/ButtonX";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PopupModal from "../modal/PopupModal";
 interface props {
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -11,6 +12,7 @@ interface props {
 }
 
 const Card: FC<props> = ({
+  id,
   title = "אריזוטו",
   description = "כהגה הקה קהק",
   price = 12,
@@ -37,6 +39,7 @@ const Card: FC<props> = ({
         <PopupModal
           open={isOpenModal}
           setOpen={setIsOpenModal}
+          id={id}
           title={title}
           description={description}
           price={price}
