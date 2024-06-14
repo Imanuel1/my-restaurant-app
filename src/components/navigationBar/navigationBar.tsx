@@ -140,7 +140,10 @@ const NavbarHook = ({}) => {
             className={linkClassName}
             onClick={closeMobileMenu}
           >
-            הזמנות
+            {activeUser?.attributes?.role === "manager" ||
+            activeUser?.attributes?.role === "worker"
+              ? "הזמנות"
+              : "הזמנות שלי"}
           </NavLink>
         </li>
         {/* <li>
