@@ -146,7 +146,11 @@ export const getOrders = async (
     const orderQuery: Parse.Query = new Parse.Query("Order");
     if (userType === "client") {
       orderQuery.equalTo("userId", userId);
+    } else if (!userType && !userId) {
+      const tableNumber = localStorage.getItem("tableNumber");
+      orderQuery.equalTo("tableNumber", Number(tableNumber));
     }
+
     orderQuery.include("menuIds");
     const orderResults = await orderQuery.find();
     console.log(" results :", orderResults);
@@ -156,29 +160,6 @@ export const getOrders = async (
     );
 
     console.log("this is order ralation res :", orderWithMenus);
-
-    // Limit to 50 results only for example so we don't fetch too much data
-    // innerQueryOrder.limit(50);
-    // let joinQueryMenu = new Parse.Query("Menu");
-    // // Match the TableA query by the "link" property
-    // joinQueryMenu.matchesQuery("link", innerQueryOrder);
-    // // Include the "link" property so we have the content of TableA as well
-    // joinQueryMenu.include("link");
-    // let joinQueryResults = await joinQueryMenu.find();
-
-    // // INNER JOIN, get only the records in TableA that have matching records in TableB
-    // console.log("INNER JOIN");
-    // console.log("TABLE A ID | FIELD A | FIELD B");
-    // console.log(`results - ${joinQueryResults}}`);
-    // for (let joinResult of joinQueryResults) {
-    //   console.log(
-    //     `${joinResult.get("menuId").id} | ${joinResult
-    //       .get("menuId")
-    //       .get("FieldA")} | ${joinResult.get("FieldB")}`
-    //   );
-    // }
-
-    // const orderList: Parse.Object[] = await orderQuery.find();
 
     return orderWithMenus;
   } catch (error: any) {

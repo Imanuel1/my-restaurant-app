@@ -9,13 +9,18 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import { Avatar, ListItemAvatar } from "@mui/material";
+import { Avatar, ListItemAvatar, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ButtonX from "../../components/buttonCustom/ButtonX";
 import "./Order.css";
 import { UserContext } from "../../context/UserContext";
 import { OrderContext } from "../../context/OrderContext";
-import { createOrder, getOrders, getOrdersType } from "../../parse/order";
+import {
+  StatuMenuType,
+  createOrder,
+  getOrders,
+  getOrdersType,
+} from "../../parse/order";
 import ManageOrder from "../../components/ManageOrder/ManageOrder";
 
 interface PreOrder {
@@ -39,7 +44,7 @@ export default function Order() {
   //   currentOrder ? [currentOrder] : null
   // );
   const [orderData, setOrderData] = useState<getOrdersType[] | null>(null);
-  const [tableNumber, setTableNumbera] = useState<number>();
+  const [tableNumber, setTableNumber] = useState<number>();
 
   useEffect(() => {
     //request for order of the current user
@@ -56,11 +61,15 @@ export default function Order() {
   //get order init statuses - timer every 10 minutes
 
   const handleSendToOperation = () => {
+    localStorage.setItem("tableNumber", String(tableNumber));
+    //remove the local order
+    clearOrder();
+
     //request to order => change order status!
     console.log("data sent to create order - ", orderData);
     //TODO: table number
     if (currentOrder) {
-      createOrder(currentOrder?.menuItems, activeUser?.id, 5)
+      createOrder(currentOrder?.menuItems, activeUser?.id, tableNumber)
         .then((res) => console.log("res createOrder :", res))
         .catch((err) => console.log("error whike create order", err));
     }
@@ -71,6 +80,12 @@ export default function Order() {
     : currentOrder
     ? [currentOrder]
     : null;
+
+  const statusTranslate = {
+    [StatuMenuType.PENDING]: "בהמתנה",
+    [StatuMenuType.PREPERING]: "בהכנה",
+    [StatuMenuType.COMPLETED]: "מוכן",
+  };
 
   return (
     <div className="c-orders-container">
@@ -89,6 +104,22 @@ export default function Order() {
                   const title = (value as any)?.name || (value as any)?.title;
                   const labelId = `checkbox-list-label-${menuId}`;
 
+                  let orderStatusitem: {
+                    [key in string]: getOrdersType["order"]["statusOrder"][number];
+                  } = {};
+                  //if is order that sent to kitchen
+                  if ((visibleOrderList[0] as getOrdersType)?.order) {
+                    orderStatusitem = (
+                      visibleOrderList[0] as getOrdersType
+                    ).order.statusOrder?.reduce(
+                      (acc, item) => ({
+                        ...acc,
+                        [item.menuId]: item,
+                      }),
+                      {}
+                    );
+                  }
+
                   return (
                     <div className="item-container" key={index}>
                       <ListItem
@@ -102,7 +133,11 @@ export default function Order() {
                             <Avatar
                               alt="Remy Sharp"
                               src={value.image}
-                              sx={{ cursor: "pointer" }}
+                              sx={{
+                                cursor: "pointer",
+                                // width: "70px",
+                                // height: "70px",
+                              }}
                             />
                           </ListItemAvatar>
                         }
@@ -136,17 +171,39 @@ export default function Order() {
                                   <span>{value.comments}</span>
                                 </>
                               ) : null}
+                              {Object.keys(orderStatusitem).length ? (
+                                <div>
+                                  <Typography
+                                    sx={{ display: "inline" }}
+                                    component="span"
+                                    variant="body2"
+                                    color="text.primary"
+                                  >
+                                    סטאטוס מנה -
+                                  </Typography>
+                                  <span>
+                                    {
+                                      statusTranslate[
+                                        orderStatusitem?.[menuId].status
+                                      ]
+                                    }
+                                  </span>
+                                  {/* //TODO: stepper component that will change menu status */}
+                                </div>
+                              ) : null}
                             </React.Fragment>
                           }
                         />
                         {/* <ListItemButton> */}
-                        <IconButton
-                          sx={{ width: "max-content", padding: "7px" }}
-                          edge="start"
-                          aria-label="comments"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
+                        {!Object.keys(orderStatusitem).length ? (
+                          <IconButton
+                            sx={{ width: "max-content", padding: "7px" }}
+                            edge="start"
+                            aria-label="comments"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        ) : null}
                         {/* </ListItemButton> */}
                       </ListItem>
                       {orderData && orderData.length - 1 !== index ? (
@@ -166,11 +223,26 @@ export default function Order() {
             currentOrder &&
             currentOrder?.menuItems?.length > 0 &&
             !orderData?.length ? (
-              <ButtonX
-                text="שליחה לביצוע"
-                Icon={{ IconName: SendIcon, isButton: true }}
-                onClick={(value: string) => handleSendToOperation()}
-              />
+              <>
+                <TextField
+                  value={tableNumber}
+                  onChange={(e) => {
+                    setTableNumber(Number(e.target.value));
+                    console.log("on change e:", e.target.value);
+                  }}
+                  id="outlined-basic"
+                  label="מס' שולחן"
+                  variant="standard"
+                  type="number"
+                  style={{ direction: "rtl" }}
+                />
+                <ButtonX
+                  text="שליחה לביצוע"
+                  Icon={{ IconName: SendIcon, isButton: true }}
+                  onClick={(value: string) => handleSendToOperation()}
+                  disabled={tableNumber === undefined}
+                />
+              </>
             ) : null
           }
         </>

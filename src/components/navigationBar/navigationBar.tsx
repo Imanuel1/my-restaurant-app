@@ -155,15 +155,17 @@ const NavbarHook = ({}) => {
             Favorite
           </NavLink>
         </li> */}
-        <li>
-          <NavLink
-            to="/payment"
-            className={linkClassName}
-            onClick={closeMobileMenu}
-          >
-            תשלום
-          </NavLink>
-        </li>
+        {!activeUser || activeUser?.attributes?.role === "client" ? (
+          <li>
+            <NavLink
+              to="/payment"
+              className={linkClassName}
+              onClick={closeMobileMenu}
+            >
+              תשלום
+            </NavLink>
+          </li>
+        ) : null}
         {activeUser?.attributes?.role === "manager" ? (
           <li>
             <NavLink

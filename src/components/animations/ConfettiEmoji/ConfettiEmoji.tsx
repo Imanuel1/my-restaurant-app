@@ -53,11 +53,14 @@ export function ConfettiEmoji() {
 export function PaymentApproveButton({
   text,
   style,
+  onClick,
 }: {
   text: string;
   style: CSSProperties;
+  onClick: () => void;
 }) {
   const handleClick = () => {
+    onClick();
     const scalar = 3;
     const money = Confetti.shapeFromText({ text: "💵", scalar });
     const dolar = Confetti.shapeFromText({ text: "💲", scalar });

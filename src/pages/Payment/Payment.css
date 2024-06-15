@@ -10,3 +10,58 @@
 .c-payment-container > h2 {
   margin-bottom: 1.5rem;
 }
+
+.payment-option {
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.payment-option > .images-holder {
+  display: flex;
+}
+
+.payment-option > .images-holder > img {
+  border-radius: 0.6rem;
+  margin: 10px;
+  width: 200px;
+}
+.payment-option > .images-holder > img:hover {
+  opacity: 0.9;
+  scale: 1.02;
+}
+
+.payment-option > .images-holder > img.selected {
+  border: 1.5px solid rgb(44, 78, 199);
+  box-shadow: var(--cb-shadow-medium);
+  opacity: 1.1;
+}
+
+.payment-option > .MuiFormControl-root label {
+  margin: 0px 80px;
+}
+
+.payment-option > .MuiFormControl-root > .MuiFormGroup-root {
+  display: flex;
+  flex-direction: row !important;
+  flex-wrap: unset !important;
+}
+
+.no-order-data {
+  padding: 16px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 450px) {
+  .payment-option > .images-holder > img {
+    width: 150px;
+  }
+  .payment-option > .MuiFormControl-root label {
+    margin: 0px 60px;
+  }
+}
