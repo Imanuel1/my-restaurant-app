@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { Avatar, ListItemAvatar, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import ButtonX from "../../components/buttonCustom/ButtonX";
 import "./Order.css";
 import { UserContext } from "../../context/UserContext";
@@ -45,8 +47,10 @@ export default function Order() {
   // );
   const [orderData, setOrderData] = useState<getOrdersType[] | null>(null);
   const [tableNumber, setTableNumber] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsLoading(true);
     //request for order of the current user
     const userType = activeUser?.attributes?.role || "";
     getOrders(activeUser?.id || "", userType)
@@ -54,13 +58,15 @@ export default function Order() {
         setOrderData(res);
         console.log("res res order:", res);
       })
-      .catch((err) => console.error("error while getOrders :", err));
+      .catch((err) => console.error("error while getOrders :", err))
+      .finally(() => setIsLoading(false));
   }, []);
 
   //clear local storage +
   //get order init statuses - timer every 10 minutes
 
   const handleSendToOperation = () => {
+    setIsLoading(true);
     localStorage.setItem("tableNumber", String(tableNumber));
     //remove the local order
     clearOrder();
@@ -71,7 +77,8 @@ export default function Order() {
     if (currentOrder) {
       createOrder(currentOrder?.menuItems, activeUser?.id, tableNumber)
         .then((res) => console.log("res createOrder :", res))
-        .catch((err) => console.log("error whike create order", err));
+        .catch((err) => console.log("error whike create order", err))
+        .finally(() => setIsLoading(false));
     }
   };
 
@@ -86,6 +93,22 @@ export default function Order() {
     [StatuMenuType.PREPERING]: "בהכנה",
     [StatuMenuType.COMPLETED]: "מוכן",
   };
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div className="c-orders-container">

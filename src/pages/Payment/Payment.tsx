@@ -3,6 +3,8 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import "./Payment.css";
 import { PaymentApproveButton } from "../../components/animations/ConfettiEmoji/ConfettiEmoji";
 import bit from "../../assets/images/bit.png";
@@ -15,9 +17,11 @@ const Payment: React.FC = () => {
   const [value, setValue] = useState<string>("Bit");
   const [orderData, setOrderData] = useState<getOrdersType[] | null>(null);
   const { activeUser } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handlePaymentClick = async () => {
     if (orderData?.[0]) {
+      setIsLoading(true);
       const isHistoryCreated = await createOrderHistory(
         orderData?.[0]?.order?.id,
         value
@@ -29,6 +33,7 @@ const Payment: React.FC = () => {
   };
 
   const getCurrentOrder = () => {
+    setIsLoading(true);
     //request for order of the current user
     const userType = activeUser?.attributes?.role || "";
     getOrders(activeUser?.id || "", userType)
@@ -36,12 +41,29 @@ const Payment: React.FC = () => {
         setOrderData(res);
         console.log("res res order:", res);
       })
-      .catch((err) => console.error("error while getOrders :", err));
+      .catch((err) => console.error("error while getOrders :", err))
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
     getCurrentOrder();
   }, []);
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   //TODO: if have no order show -> no order!!
   if (!orderData?.[0]?.order) {
