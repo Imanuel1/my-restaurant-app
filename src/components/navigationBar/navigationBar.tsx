@@ -166,7 +166,8 @@ const NavbarHook = ({}) => {
             </NavLink>
           </li>
         ) : null}
-        {activeUser?.attributes?.role === "manager" ? (
+        {activeUser?.attributes?.role === "manager" ||
+        activeUser?.attributes?.role === "worker" ? (
           <li>
             <NavLink
               to="/allMenus"

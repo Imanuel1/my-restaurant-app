@@ -56,18 +56,18 @@ const foodType = [
 
 export const userRoutes = {
   manager: {
-    defaultRoute: "/menu",
+    defaultRoute: "/allMenus",
     pages: [
       {
         path: "/about",
         label: "אפליקציית שדרות היסע",
         element: <About />,
       },
-      {
-        path: "/menu",
-        label: "אפליקציית שדרות היסע",
-        element: <Main dishType={foodType} />,
-      },
+      // {
+      //   path: "/menu",
+      //   label: "אפליקציית שדרות היסע",
+      //   element: <Main dishType={foodType} />,
+      // },
       {
         path: "/my-order",
         label: "אפליקציית שדרות היסע",
@@ -94,18 +94,18 @@ export const userRoutes = {
     ],
   },
   worker: {
-    defaultRoute: "/menu",
+    defaultRoute: "/allMenus",
     pages: [
       {
         path: "/about",
         label: "אפליקציית שדרות היסע",
         element: <About />,
       },
-      {
-        path: "/menu",
-        label: "אפליקציית שדרות היסע",
-        element: <Main dishType={foodType} />,
-      },
+      // {
+      //   path: "/menu",
+      //   label: "אפליקציית שדרות היסע",
+      //   element: <Main dishType={foodType} />,
+      // },
       {
         path: "/my-order",
         label: "אפליקציית שדרות היסע",
@@ -115,6 +115,11 @@ export const userRoutes = {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
         element: <Payment />,
+      },
+      {
+        path: "/allMenus",
+        label: "אפליקציית שדרות היסע",
+        element: <ManageMenus dishType={foodType} />,
       },
       // {
       //   path: "/logout",
