@@ -95,12 +95,40 @@ export const updateMenu = async ({
     await menu.save();
     // Success
     // alert("Success! get menu list!");
-    
 
     return menu;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
     alert(`Error! ${error.message}`);
     return null;
+  }
+};
+export const deleteMenu = async ({
+  ids,
+  type,
+}: {
+  ids: string[];
+  type?: MenuType;
+}) => {
+  try {
+    const query = new Parse.Query("Menu");
+    if (type) {
+      query.equalTo("type", type);
+    }
+    query.containedIn("objectId", ids);
+
+    const menus = await query.find();
+    await Promise.all(menus.map((menu) => menu.destroy()))
+      .then(() => {
+        console.log("Menus deleted successfully!");
+      })
+      .catch((error) => {
+        console.error("Error deleting menus:", error);
+      });
+    return true;
+  } catch (error: any) {
+    // Error can be caused by lack of Internet connection
+    alert(`Error! ${error.message}`);
+    return false;
   }
 };

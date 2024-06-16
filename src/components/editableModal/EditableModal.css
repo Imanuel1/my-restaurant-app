@@ -1,0 +1,79 @@
+.c-popup-editable-modal {
+  width: 520px;
+  height: max-content;
+  min-width: 280px;
+  min-height: 330p;
+  max-width: 80vw;
+  max-height: 80vh;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  /* background-color: var(--cb-color-bg-surface); */
+  color: var(--cb-color-text);
+  font-family: var(--body-font);
+}
+
+.c-popup-editable-modal > div {
+  outline: none;
+  overflow: hidden;
+  border-radius: 0.6rem;
+}
+.c-popup-editable-modal > div > .header-container {
+  padding: 16px;
+  width: 100%;
+  aspect-ratio: unset;
+}
+.c-popup-editable-modal > div > .body-container {
+  position: relative;
+  padding: 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.c-popup-editable-modal > div > .footer-container {
+  position: relative;
+  padding: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.footer-container .c-button-container > button > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-container .c-button-container > button > div > span {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.footer-container > .inc-dec-buttons {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  background-color: var(--cb-color-bg-surface-brand);
+  border-radius: 0.5rem;
+  color: var(--cb-color-text-brand);
+  padding: 2px 7px;
+}
+
+.footer-container > .inc-dec-buttons > .units-holder {
+  width: 25px;
+  text-align: center;
+}
+
+.footer-container > .inc-dec-buttons button {
+  min-width: 32px !important;
+  text-align: center;
+}
+.footer-container > .inc-dec-buttons button > span {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
