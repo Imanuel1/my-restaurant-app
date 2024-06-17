@@ -235,10 +235,11 @@ export const updateOrderStatus = async ({
     const orderQuey: Parse.Query = new Parse.Query("Order");
     orderQuey.equalTo("objectId", id);
     const order: Parse.Object | undefined = await orderQuey.first();
+    console.log("updateOrderStatus - status :", status);
 
     if (order) {
       const newStatusOrder = order.attributes?.statusOrder.map((item: any) =>
-        item.menuId === menuId ? { ...item, status } : item
+        item.menuId === menuId ? { ...item, status: status } : item
       );
 
       order.set("statusOrder", newStatusOrder);

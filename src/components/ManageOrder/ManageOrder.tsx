@@ -58,8 +58,8 @@ export default function ManageOrder({
             const labelId = `checkbox-list-label-${value.order.id}`;
 
             return (
-              <>
-                <div className="item-container" key={index}>
+              <Fragment key={index}>
+                <div className="item-container">
                   <ListItemButton onClick={() => handleRowClick(index)}>
                     {isOpenItems[index] ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
@@ -91,7 +91,10 @@ export default function ManageOrder({
                         );
 
                         return (
-                          <div className="manager-order-item">
+                          <div
+                            className="manager-order-item"
+                            key={`${index}-${orderItem.menuId}`}
+                          >
                             <ListItemAvatar
                               sx={{
                                 display: "flex",
@@ -140,7 +143,7 @@ export default function ManageOrder({
                                     </div>
                                   ) : null}
                                   {orderItem.status ? (
-                                    <div>
+                                    <div className="stepper-holder">
                                       {/* <Typography
                                         sx={{ display: "inline" }}
                                         component="span"
@@ -176,7 +179,7 @@ export default function ManageOrder({
                 {orderData && orderData.length - 1 !== index ? (
                   <Divider variant="inset" component="li" />
                 ) : null}
-              </>
+              </Fragment>
             );
           })
         ) : (

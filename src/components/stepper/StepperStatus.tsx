@@ -33,9 +33,9 @@ const statuses = {
   [StatuMenuType.COMPLETED]: "Completed",
 };
 const indexToStatus = {
-  0: [StatuMenuType.PENDING],
-  1: [StatuMenuType.PREPERING],
-  2: [StatuMenuType.COMPLETED],
+  0: StatuMenuType.PENDING,
+  1: StatuMenuType.PREPERING,
+  2: StatuMenuType.COMPLETED,
 };
 const statusToIndex = {
   [StatuMenuType.PENDING]: 0,
@@ -118,7 +118,11 @@ const StepperStatus: FC<props> = ({ orderId, menuId, status }) => {
   const { activeUser } = useContext(UserContext);
 
   useEffect(() => {
-    updateOrderStatus({ id: orderId, menuId, status });
+    updateOrderStatus({
+      id: orderId,
+      menuId,
+      status: indexToStatus[activeStep as keyof typeof indexToStatus] as string,
+    });
   }, [activeStep]);
 
   return (

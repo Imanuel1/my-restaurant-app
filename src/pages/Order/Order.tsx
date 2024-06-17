@@ -196,7 +196,7 @@ export default function Order() {
                                 </>
                               ) : null}
                               {Object.keys(orderStatusitem).length ? (
-                                <div>
+                                <div className="stepper-holder">
                                   {/* <Typography
                                     sx={{ display: "inline" }}
                                     component="span"

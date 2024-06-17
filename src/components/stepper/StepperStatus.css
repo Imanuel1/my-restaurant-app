@@ -1,11 +1,23 @@
-.stepper-container .admin {
+.stepper-holder {
+  width: 80%;
+  direction: ltr;
+  padding: 16px;
+}
+
+.stepper-container .admin > .MuiStepLabel-root > .MuiStepLabel-iconContainer {
   cursor: pointer;
   opacity: 1;
-  transition: opacity 0.6s;
+  transition: opacity 0.4s;
 }
-.stepper-container .admin:hover {
-  opacity: 0.9;
+.stepper-container
+  .admin
+  > .MuiStepLabel-root
+  > .MuiStepLabel-iconContainer:hover {
+  opacity: 0.7;
 }
-.stepper-container .admin:active {
-  opacity: 1.05;
+.stepper-container
+  .admin
+  > .MuiStepLabel-root
+  > .MuiStepLabel-iconContainer:active {
+  opacity: 1.1;
 }
