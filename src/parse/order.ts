@@ -221,3 +221,36 @@ export const updateOrder = async ({
     return null;
   }
 };
+
+export const updateOrderStatus = async ({
+  id,
+  menuId,
+  status,
+}: {
+  id: string;
+  menuId: string;
+  status: string;
+}) => {
+  try {
+    const orderQuey: Parse.Query = new Parse.Query("Order");
+    orderQuey.equalTo("objectId", id);
+    const order: Parse.Object | undefined = await orderQuey.first();
+
+    if (order) {
+      const newStatusOrder = order.attributes?.statusOrder.map((item: any) =>
+        item.menuId === menuId ? { ...item, status } : item
+      );
+
+      order.set("statusOrder", newStatusOrder);
+      await order.save();
+    } else {
+      alert("Error! order not exist!");
+    }
+
+    return order;
+  } catch (error: any) {
+    // Error can be caused by lack of Internet connection
+    alert(`Error! ${error.message}`);
+    return null;
+  }
+};

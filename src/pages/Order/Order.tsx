@@ -24,6 +24,7 @@ import {
   getOrdersType,
 } from "../../parse/order";
 import ManageOrder from "../../components/ManageOrder/ManageOrder";
+import StepperStatus from "../../components/stepper/StepperStatus";
 
 interface PreOrder {
   menuItems: {
@@ -196,7 +197,7 @@ export default function Order() {
                               ) : null}
                               {Object.keys(orderStatusitem).length ? (
                                 <div>
-                                  <Typography
+                                  {/* <Typography
                                     sx={{ display: "inline" }}
                                     component="span"
                                     variant="body2"
@@ -210,8 +211,15 @@ export default function Order() {
                                         orderStatusitem?.[menuId].status
                                       ]
                                     }
-                                  </span>
-                                  {/* //TODO: stepper component that will change menu status */}
+                                  </span> */}
+                                  <StepperStatus
+                                    orderId={
+                                      (visibleOrderList?.[0] as any)?.order
+                                        ?.id as string
+                                    }
+                                    menuId={menuId}
+                                    status={orderStatusitem?.[menuId].status}
+                                  />
                                 </div>
                               ) : null}
                             </React.Fragment>

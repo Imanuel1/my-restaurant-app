@@ -1,0 +1,11 @@
+.stepper-container .admin {
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.6s;
+}
+.stepper-container .admin:hover {
+  opacity: 0.9;
+}
+.stepper-container .admin:active {
+  opacity: 1.05;
+}

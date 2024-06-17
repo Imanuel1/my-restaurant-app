@@ -25,6 +25,7 @@ import SendIcon from "@mui/icons-material/Send";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import StarBorder from "@mui/icons-material/StarBorder";
+import StepperStatus from "../stepper/StepperStatus";
 
 export default function ManageOrder({
   orderData,
@@ -140,7 +141,7 @@ export default function ManageOrder({
                                   ) : null}
                                   {orderItem.status ? (
                                     <div>
-                                      <Typography
+                                      {/* <Typography
                                         sx={{ display: "inline" }}
                                         component="span"
                                         variant="body2"
@@ -150,8 +151,13 @@ export default function ManageOrder({
                                       </Typography>
                                       <span>
                                         {statusTranslate[orderItem.status]}
-                                      </span>
+                                      </span> */}
                                       {/* //TODO: stepper component that will change menu status */}
+                                      <StepperStatus
+                                        orderId={value.order.id}
+                                        menuId={orderItem.menuId}
+                                        status={orderItem.status}
+                                      />
                                     </div>
                                   ) : null}
                                 </React.Fragment>

@@ -30,7 +30,9 @@ code {
   --body-color: rgb(15, 15, 15);
   --body-font: "Montserrat", sans-serif;
   --second-font: "Dancing Script", cursive;
-  --h2-font-size: 1.25rem;
+  --h3-font-size: 1.05rem;
+  --h2-font-size: 1.55rem;
+  --h1-font-size: 2.25rem;
   --small-font-size: 0.813rem;
   --font-semi-bold: 600;
   --z-tooltip: 10;
@@ -232,3 +234,9 @@ ul {
 a {
   text-decoration: none;
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Doodle+Triangles&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Doodle+Triangles&family=Rubik+Scribble&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1p&family=Rubik+Doodle+Triangles&family=Rubik+Puddles&family=Rubik+Scribble&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1p&family=Rubik+Doodle+Triangles&family=Rubik+Maps&family=Rubik+Puddles&family=Rubik+Scribble&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap");

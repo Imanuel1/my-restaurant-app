@@ -1,6 +1,19 @@
 .c-loading-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.c-loading-page > h1 {
+  font-family: "Rubik Scribble", system-ui;
+  color: var(--first-color);
+  transition: color 0.4s;
+  font-size: var(--h1-font-size);
+}
+.c-loading-page > h3 {
+  font-family: "Rubik Maps", system-ui;
+  color: var(--cb-color-border-negative);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--h2-font-size);
 }

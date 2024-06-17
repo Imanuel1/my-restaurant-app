@@ -90,6 +90,9 @@ import { useMediaQuery } from "react-responsive";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import "./navigationBar.css";
+import logo from "../../assets/icons/app-logo.jpeg";
+import logo1 from "../../assets/icons/la_academic1.jpeg";
+import logo7 from "../../assets/icons/la_academic7.svg";
 import { MenuType } from "../../parse/menu";
 
 // import "./NavbarMobile.css";
@@ -226,7 +229,12 @@ const NavbarHook = ({}) => {
     <header className="header">
       <nav className="nav container">
         <NavLink to="/" className="nav__logo">
-          NewMew
+          <img
+            className="logo-image"
+            style={{ width: isMobile ? "20px" : "40px", borderRadius: "3rem" }}
+            src={logo7}
+            alt="logo"
+          />
         </NavLink>
         {isMobile && (
           <div className="nav__toggle" id="nav-toggle" onClick={toggleMenu}>
