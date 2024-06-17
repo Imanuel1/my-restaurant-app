@@ -41,6 +41,8 @@ const ManageMenus = ({
         })
         .catch((err) => console.error("error while getMenusByType: ", err))
         .finally(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
     }
   };
 
