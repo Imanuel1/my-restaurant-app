@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/my-restaurant-app/static/css/main.dd074b00.css",
-    "main.js": "/my-restaurant-app/static/js/main.bad75881.js",
+    "main.css": "/my-restaurant-app/static/css/main.c614e6a1.css",
+    "main.js": "/my-restaurant-app/static/js/main.f27076cc.js",
     "static/js/453.1fec96de.chunk.js": "/my-restaurant-app/static/js/453.1fec96de.chunk.js",
     "static/media/la_academic7.svg": "/my-restaurant-app/static/media/la_academic7.540cc8b03d147eb8877b31fab684a49d.svg",
     "static/media/payment-cash.png": "/my-restaurant-app/static/media/payment-cash.355cdc11dfbca55932d3.png",
@@ -13,12 +13,12 @@
     "static/media/bit.png": "/my-restaurant-app/static/media/bit.9cb0e3caee1e68f4f516.png",
     "static/media/banana.svg": "/my-restaurant-app/static/media/banana.ee2e592d97e484822175b814b86b26bd.svg",
     "index.html": "/my-restaurant-app/index.html",
-    "main.dd074b00.css.map": "/my-restaurant-app/static/css/main.dd074b00.css.map",
-    "main.bad75881.js.map": "/my-restaurant-app/static/js/main.bad75881.js.map",
+    "main.c614e6a1.css.map": "/my-restaurant-app/static/css/main.c614e6a1.css.map",
+    "main.f27076cc.js.map": "/my-restaurant-app/static/js/main.f27076cc.js.map",
     "453.1fec96de.chunk.js.map": "/my-restaurant-app/static/js/453.1fec96de.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.dd074b00.css",
-    "static/js/main.bad75881.js"
+    "static/css/main.c614e6a1.css",
+    "static/js/main.f27076cc.js"
   ]
 }
