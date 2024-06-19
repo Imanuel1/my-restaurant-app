@@ -20,9 +20,10 @@ export const createOrderHistory = async (
 
     if (order) {
       const orderHistory = new Parse.Object("OrderHistory");
-      orderHistory.set("userId", order.get("userId")); // Assuming userId exists in Order
+      orderHistory.set("userId", order.attributes?.userId || "guest"); // Assuming userId exists in Order
       orderHistory.set("tableNumber", order.get("tableNumber"));
       orderHistory.set("menuIds", order.attributes.menuIds); // Assuming menuIds is a Relation
+      orderHistory.set("menuName", order.attributes.menuName); // Assuming menuIds is a Relation
       orderHistory.set("cost", order.get("cost"));
       orderHistory.set("paymentOption", paymentOption);
       orderHistory.set("date", order.get("updatedAt")); // Assuming date exists in Order
@@ -56,6 +57,7 @@ const getOrderWithMenus = async (
         string,
         {
           menuId: string;
+          menuName: string;
           units: number;
           cost: number;
           comments: string;
@@ -66,6 +68,7 @@ const getOrderWithMenus = async (
         order.attributes.statusOrder.map(
           (itemStatus: {
             menuId: string;
+            menuName: string;
             units: number;
             cost: number;
             comments: string;
@@ -97,6 +100,7 @@ export interface getHistoryOrdersType {
     userId: string;
     statusOrder: {
       menuId: string;
+      menuName: string;
       units: number;
       cost: number;
       comments: string;

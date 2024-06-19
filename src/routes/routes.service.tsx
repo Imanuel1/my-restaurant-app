@@ -16,6 +16,7 @@ import SignupForm from "../pages/Signup/Signup";
 import MenuList from "../pages/MenuList/MenuList";
 import { MenuType } from "../parse/menu";
 import ManageMenus from "../pages/ManageMenus/ManageMenus";
+import Reports from "../pages/reports/Reports";
 
 // MyOrder.tsx
 {
@@ -82,6 +83,11 @@ export const userRoutes = {
         path: "/allMenus",
         label: "אפליקציית שדרות היסע",
         element: <ManageMenus dishType={foodType} />,
+      },
+      {
+        path: "/reports",
+        label: "אפליקציית שדרות היסע",
+        element: <Reports />,
       },
       // {
       //   path: "/logout",

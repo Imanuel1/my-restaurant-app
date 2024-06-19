@@ -30,13 +30,16 @@ export const createOrder = async (
       order.set("userId", user?.toPointer());
     }
 
-    const statusOrder = menuItems.map(({ menuId, units, cost, comments }) => ({
-      menuId,
-      units,
-      cost,
-      comments,
-      status: StatuMenuType.PENDING,
-    }));
+    const statusOrder = menuItems.map(
+      ({ menuId, title, units, cost, comments }) => ({
+        menuId,
+        menuName: title,
+        units,
+        cost,
+        comments,
+        status: StatuMenuType.PENDING,
+      })
+    );
     const menuIds = menuItems.map((item) => item.menuId);
     const cost = menuItems.reduce((acc, item) => acc + item.cost, 0);
     order.set("statusOrder", statusOrder);
@@ -76,6 +79,7 @@ const getOrderWithMenus = async (
         string,
         {
           menuId: string;
+          menuName: string;
           units: number;
           cost: number;
           comments: string;
@@ -85,6 +89,7 @@ const getOrderWithMenus = async (
         order.attributes.statusOrder.map(
           (itemStatus: {
             menuId: string;
+            menuName: string;
             units: number;
             cost: number;
             comments: string;
@@ -115,6 +120,7 @@ export interface getOrdersType {
     userId: string;
     statusOrder: {
       menuId: string;
+      menuName: string;
       units: number;
       cost: number;
       comments: string;
@@ -143,15 +149,21 @@ export const getOrders = async (
   userType: "client" | "worker" | "manager"
 ): Promise<getOrdersType[] | null> => {
   try {
+    console.log("getOrders - userID/userType", userId, userType);
+
     const orderQuery: Parse.Query = new Parse.Query("Order");
     if (userType === "client") {
-      orderQuery.equalTo("userId", userId);
+      // orderQuery.include("userId");
+      // orderQuery.equalTo("userId", userId);
+      const tableNumber = localStorage.getItem("tableNumber");
+      orderQuery.equalTo("tableNumber", Number(tableNumber));
     } else if (!userType && !userId) {
       const tableNumber = localStorage.getItem("tableNumber");
       orderQuery.equalTo("tableNumber", Number(tableNumber));
     }
 
     orderQuery.include("menuIds");
+
     const orderResults = await orderQuery.find();
     console.log(" results :", orderResults);
 

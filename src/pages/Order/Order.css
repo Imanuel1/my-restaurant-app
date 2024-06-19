@@ -56,4 +56,5 @@
 .item-container > .MuiListItem-root > .MuiListItemText-root > p {
   display: flex;
   align-items: flex-start;
+  width: 100%;
 }

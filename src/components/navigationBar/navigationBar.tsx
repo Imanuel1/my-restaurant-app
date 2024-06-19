@@ -181,6 +181,17 @@ const NavbarHook = ({}) => {
             </NavLink>
           </li>
         ) : null}
+        {activeUser?.attributes?.role === "manager" ? (
+          <li>
+            <NavLink
+              to="/reports"
+              className={linkClassName}
+              onClick={closeMobileMenu}
+            >
+              דוחות
+            </NavLink>
+          </li>
+        ) : null}
         {activeUser ? (
           <li className="logout-li">
             <span style={{ marginLeft: 7 }}>{`ברוך הבא ${
