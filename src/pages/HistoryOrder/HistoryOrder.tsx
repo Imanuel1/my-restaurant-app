@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState, Fragment } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  Fragment,
+} from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -6,40 +12,146 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import { Avatar, ListItemAvatar } from "@mui/material";
-import ButtonX from "../buttonCustom/ButtonX";
-import "./ManageOrder.css";
+import { Avatar, ListItemAvatar, TextField } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import ButtonX from "../../components/buttonCustom/ButtonX";
+import "./HistoryOrder.css";
+import { UserContext } from "../../context/UserContext";
+import { OrderContext } from "../../context/OrderContext";
 import {
+  StatuMenuType,
   createOrder,
   getOrders,
   getOrdersType,
-  StatuMenuType,
+  updateOrder,
 } from "../../parse/order";
+import ManageOrder from "../../components/ManageOrder/ManageOrder";
+import StepperStatus from "../../components/stepper/StepperStatus";
 import Collapse from "@mui/material/Collapse";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import SendIcon from "@mui/icons-material/Send";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
-import StepperStatus from "../stepper/StepperStatus";
+import {
+  getHistoryOrders,
+  getHistoryOrdersType,
+} from "../../parse/orderHistory";
 
-export default function ManageOrder({
-  orderData,
-}: {
-  orderData: getOrdersType[];
-}) {
-  const [isOpenItems, setIsOpenItems] = useState(
-    new Array(orderData.length || 0).fill(false)
+export default function HistoryOrder() {
+  const { activeUser } = useContext(UserContext);
+  const { setOrder, currentOrder } = useContext(OrderContext);
+
+  const [orderData, setOrderData] = useState<getHistoryOrdersType[] | null>(
+    null
   );
+  const tableNumber = useRef(localStorage?.getItem("tableNumber"));
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isOpenItems, setIsOpenItems] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    if (orderData?.length) {
+      setIsOpenItems(new Array(orderData.length || 0).fill(false));
+    }
+  }, [orderData]);
+
+  const getHistoryRequest = () => {
+    //request for order of the current user
+    const userType = activeUser?.attributes?.role || "";
+    getHistoryOrders(activeUser?.id || "", userType)
+      .then((res) => {
+        setOrderData(res);
+        console.log("res res order:", res);
+      })
+      .catch((err) => console.error("error while getOrders :", err))
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getHistoryRequest();
+  }, []);
+
+  const visibleOrderList =
+    (orderData &&
+      orderData?.length &&
+      activeUser?.attributes?.role === "manager") ||
+    activeUser?.attributes?.role === "worker"
+      ? orderData
+      : orderData?.filter((order) => order.order?.userId === activeUser?.id);
 
   const statusTranslate = {
     [StatuMenuType.PENDING]: "בהמתנה",
     [StatuMenuType.PREPERING]: "בהכנה",
     [StatuMenuType.COMPLETED]: "מוכן",
+  };
+
+  const handleCreateOrderFromHistroy = async (
+    orderId: string,
+    menuItems: getHistoryOrdersType["menuItems"],
+    statusOrder: getHistoryOrdersType["order"]["statusOrder"]
+  ) => {
+    setIsLoading(true);
+    //if user has proccessing order
+    try {
+      const userType = activeUser?.attributes?.role || "";
+      const userActiveOrder = await getOrders(activeUser?.id || "", userType);
+      if (userActiveOrder && userActiveOrder?.length) {
+        const sumCost = statusOrder.reduce(
+          (acc, status) => acc + status.cost,
+          0
+        );
+        await updateOrder({
+          id: userActiveOrder[0].order.id,
+          cost: sumCost,
+          menuItems: statusOrder,
+        });
+      } else {
+        //create local order
+        const orderData: {
+          menuItems: {
+            menuId: string;
+            units: number;
+            cost: number;
+            comments: string;
+            title: string;
+            description: string;
+            image: string;
+          }[];
+          userId?: string;
+        } = {
+          userId: activeUser ? activeUser.id : undefined,
+          menuItems: menuItems.map((menu, index) => ({
+            menuId: menu.id,
+            cost: statusOrder[index].cost,
+            units: statusOrder[index].units,
+            comments: menu.comments,
+            title: menu.name,
+            description: menu.description,
+            image: menu.image,
+          })),
+        };
+        if (currentOrder) {
+          orderData.userId = activeUser?.id;
+          orderData.menuItems = [
+            ...orderData.menuItems,
+            ...currentOrder.menuItems,
+          ];
+
+          setOrder(orderData);
+        } else {
+          setOrder(orderData);
+        }
+      }
+    } catch (error) {
+      console.log("error while search active order for user!", error);
+    }
+
+    setIsLoading(false);
+    getHistoryRequest();
   };
 
   const handleRowClick = (index: number) => {
@@ -50,11 +162,27 @@ export default function ManageOrder({
     });
   };
 
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <div className="c-orders-container">
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {orderData?.length > 0 ? (
-          orderData?.map((value: getOrdersType, index: number) => {
+        {visibleOrderList && visibleOrderList?.length > 0 ? (
+          visibleOrderList.map((value: getHistoryOrdersType, index: number) => {
             const labelId = `checkbox-list-label-${value.order.id}`;
 
             return (
@@ -64,14 +192,36 @@ export default function ManageOrder({
                     {isOpenItems[index] ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
                       id={labelId}
-                      primary={`הזמנה מס' שולחן ${
-                        value.order.tableNumber
-                      } - מזמין  ${
-                        (value.order.userId as any).attributes.username
-                      }`}
+                      primary={`הזמנה מס' ${index}  -  מזמין  ${
+                        value.order?.userName
+                      }  -  תאריך  ${new Date(
+                        value.order.createdAt
+                      ).toLocaleDateString()} - `}
                     />
                     <ListItemText
-                      primary={`עלות הזמנה ${value.order.cost} ₪`}
+                      primary={
+                        <>
+                          {value.order?.statusOrder?.length ? (
+                            <ButtonX
+                              Icon={{
+                                IconName: PublishedWithChangesIcon,
+                                isButton: true,
+                              }}
+                              type="success"
+                              text="הזמן שוב"
+                              aria-label="comments"
+                              onClick={() =>
+                                handleCreateOrderFromHistroy(
+                                  value.order.id,
+                                  value.menuItems,
+                                  value.order.statusOrder
+                                )
+                              }
+                            />
+                          ) : null}
+                        </>
+                      }
+                      secondary={`עלות הזמנה ${value.order.cost} ₪`}
                     />
                   </ListItemButton>
                   <Collapse
@@ -107,13 +257,13 @@ export default function ManageOrder({
                             >
                               <Avatar
                                 alt="Remy Sharp"
-                                src={menuObject[orderItem.menuId].image}
+                                src={menuObject?.[orderItem?.menuId]?.image}
                                 sx={{ cursor: "pointer" }}
                               />
                             </ListItemAvatar>
                             <ListItemText
                               id={labelId}
-                              primary={menuObject[orderItem.menuId].name}
+                              primary={orderItem?.menuName}
                               secondary={
                                 <React.Fragment>
                                   <div>
@@ -126,7 +276,10 @@ export default function ManageOrder({
                                       תיאור -
                                     </Typography>
                                     <span>
-                                      {menuObject[orderItem.menuId].description}
+                                      {
+                                        menuObject?.[orderItem.menuId]
+                                          ?.description
+                                      }
                                     </span>
                                   </div>
                                   <div>
@@ -150,10 +303,10 @@ export default function ManageOrder({
                                       מחיר -
                                     </Typography>
                                     <span>
-                                      {orderItem.cost * orderItem.units}
+                                      {`${orderItem.cost * orderItem.units} ₪`}
                                     </span>
                                   </div>
-                                  {menuObject[orderItem.menuId].comments ? (
+                                  {orderItem.comments ? (
                                     <div>
                                       <Typography
                                         sx={{ display: "block" }}
@@ -163,18 +316,7 @@ export default function ManageOrder({
                                       >
                                         הערות -
                                       </Typography>
-                                      <span>
-                                        {menuObject[orderItem.menuId].comments}
-                                      </span>
-                                    </div>
-                                  ) : null}
-                                  {orderItem.status ? (
-                                    <div className="stepper-holder">
-                                      <StepperStatus
-                                        orderId={value.order.id}
-                                        menuId={orderItem.menuId}
-                                        status={orderItem.status}
-                                      />
+                                      <span>{orderItem.comments}</span>
                                     </div>
                                   ) : null}
                                 </React.Fragment>
@@ -197,7 +339,7 @@ export default function ManageOrder({
             );
           })
         ) : (
-          <span className="no-order-data">{"לא נבחרו מנות להזמנה!"}</span>
+          <span className="no-order-data">{"לא קיים היסטוריית הזמנות"}</span>
         )}
       </List>
     </div>
@@ -206,3 +348,5 @@ export default function ManageOrder({
 
 //statuses of order: send to kitchen -> in progress -> finished
 // <Stack direction="row" spacing={1}>
+
+//

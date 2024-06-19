@@ -27,7 +27,6 @@ const Payment: React.FC = () => {
         value
       );
       console.log("is history created ?? :", isHistoryCreated);
-
       getCurrentOrder();
     }
   };
@@ -73,6 +72,7 @@ const Payment: React.FC = () => {
   return (
     <div className="c-payment-container">
       <h2>{`תשלום עבור הזמנה מס ${orderData?.[0]?.order?.id}`}</h2>
+      <h2>{`סה"כ תשלום ${orderData?.[0]?.order.cost} ₪`}</h2>
       <div className="payment-option">
         <h2>בחירת תצורת התשלום:</h2>
         <div className="images-holder">

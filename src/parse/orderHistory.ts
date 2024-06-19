@@ -1,5 +1,6 @@
 // import { MenuType } from "./menu";
 import Parse from "parse";
+import { getOrderWithMenus } from "./order";
 
 export enum StatuMenuType {
   PENDING = "Pending",
@@ -20,8 +21,20 @@ export const createOrderHistory = async (
 
     if (order) {
       const orderHistory = new Parse.Object("OrderHistory");
-      orderHistory.set("userId", order.attributes?.userId || "guest"); // Assuming userId exists in Order
+      const userId = String(order.get("userId").id);
+      if (userId) {
+        const userQuery = new Parse.Query("_User");
+        userQuery.equalTo("objectId", userId);
+        const user = await userQuery.first();
+
+        orderHistory.set("userName", user?.attributes?.username);
+        orderHistory.set("userRole", user?.attributes?.role);
+        orderHistory.set("userId", user?.id);
+      }
+      const orderMenus = await getOrderWithMenus(order);
+
       orderHistory.set("tableNumber", order.get("tableNumber"));
+      orderHistory.set("menuItems", orderMenus?.menuItems);
       orderHistory.set("menuIds", order.attributes.menuIds); // Assuming menuIds is a Relation
       orderHistory.set("menuName", order.attributes.menuName); // Assuming menuIds is a Relation
       orderHistory.set("cost", order.get("cost"));
@@ -45,12 +58,9 @@ export const createOrderHistory = async (
   }
 };
 
-const getOrderWithMenus = async (
-  order: Parse.Object<Parse.Attributes>
-): Promise<any> => {
+const orderWithMenus = (order: Parse.Object<Parse.Attributes>): any => {
   try {
     if (order) {
-      const menuItems = await order.relation("menuIds").query().find(); // Query related Menus
       // ... use order and menuItems data
       console.log("getOrderWithMenus - order :", order);
       const orderMap = new Map<
@@ -79,11 +89,7 @@ const getOrderWithMenus = async (
       );
       return {
         order: { id: order.id, ...order.attributes },
-        menuItems: menuItems.map((item) => ({
-          id: item.id,
-          comments: orderMap.get(item.id)?.comments,
-          ...item.attributes,
-        })),
+        menuItems: order.attributes?.menuItems,
       };
     } else {
       console.log("Order not found.");
@@ -98,6 +104,8 @@ export interface getHistoryOrdersType {
   order: {
     id: string;
     userId: string;
+    userName: string;
+    userRole: string;
     statusOrder: {
       menuId: string;
       menuName: string;
@@ -132,19 +140,19 @@ export const getHistoryOrders = async (
   try {
     const orderHistoryQuery: Parse.Query = new Parse.Query("OrderHistory");
     if (userType === "client") {
-      orderHistoryQuery.equalTo("userId", userId);
+      // orderHistoryQuery.equalTo("userId", userId);
     }
     orderHistoryQuery.include("menuIds");
+    orderHistoryQuery.include("userId");
+
     const orderResults = await orderHistoryQuery.find();
     console.log(" results :", orderResults);
 
-    const orderWithMenus = await Promise.all(
-      orderResults.map(async (order) => await getOrderWithMenus(order))
-    );
+    const orderWithMenu = orderResults.map((order) => orderWithMenus(order));
 
-    console.log("this is order ralation res :", orderWithMenus);
+    console.log("this is order ralation res :", orderWithMenu);
 
-    return orderWithMenus;
+    return orderWithMenu;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
     alert(`Error! ${error.message}`);

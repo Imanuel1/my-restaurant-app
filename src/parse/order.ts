@@ -67,7 +67,7 @@ export const createOrder = async (
   }
 };
 
-const getOrderWithMenus = async (
+export const getOrderWithMenus = async (
   order: Parse.Object<Parse.Attributes>
 ): Promise<any> => {
   try {
@@ -188,7 +188,7 @@ export const updateOrder = async ({
   tableNumber,
 }: {
   id: string;
-  menuItems?: { menuId: string; units: number }[];
+  menuItems?: { menuId: string; menuName: string; units: number, cost:number; comments: string; }[];
   cost?: number;
   tableNumber?: number;
 }) => {

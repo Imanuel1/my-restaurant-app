@@ -10,6 +10,7 @@ import "./PopupModal.css";
 import ButtonX from "../buttonCustom/ButtonX";
 import { OrderContext } from "../../context/OrderContext";
 import { UserContext } from "../../context/UserContext";
+import { getOrders, updateOrder } from "../../parse/order";
 
 interface props {
   open: boolean;
@@ -37,30 +38,65 @@ const PopupModal: FC<props> = ({
 
   const handleClose = () => setOpen(false);
 
-  const handleAddOrder = () => {
-    const orderData: {
-      menuItems: {
-        menuId: string;
-        units: number;
-        cost: number;
-        comments: string;
-        title: string;
-        description: string;
-        image: string;
-      }[];
-      userId?: string;
-    } = {
-      userId: activeUser ? activeUser.id : undefined,
-      menuItems: [{ menuId: id, cost: price * units, units, comments, title, description, image }],
-    };
-    if (currentOrder) {
-      orderData.userId = activeUser?.id;
-      orderData.menuItems = [...orderData.menuItems, ...currentOrder.menuItems];
+  const handleAddOrder = async () => {
+    try {
+      const userType = activeUser?.attributes?.role || "";
+      const userActiveOrder = await getOrders(activeUser?.id || "", userType);
+      if (userActiveOrder && userActiveOrder?.length) {
+        await updateOrder({
+          id: userActiveOrder[0].order.id,
+          cost: price * units,
+          menuItems: [
+            {
+              menuId: id,
+              cost: price * units,
+              units,
+              comments,
+              menuName: title,
+            },
+          ],
+        });
+      } else {
+        const orderData: {
+          menuItems: {
+            menuId: string;
+            units: number;
+            cost: number;
+            comments: string;
+            title: string;
+            description: string;
+            image: string;
+          }[];
+          userId?: string;
+        } = {
+          userId: activeUser ? activeUser.id : undefined,
+          menuItems: [
+            {
+              menuId: id,
+              cost: price * units,
+              units,
+              comments,
+              title,
+              description,
+              image,
+            },
+          ],
+        };
+        if (currentOrder) {
+          orderData.userId = activeUser?.id;
+          orderData.menuItems = [
+            ...orderData.menuItems,
+            ...currentOrder.menuItems,
+          ];
 
-      //TODO: if already has the same id in the same array - use reduce
-      setOrder(orderData);
-    } else {
-      setOrder(orderData);
+          //TODO: if already has the same id in the same array - use reduce
+          setOrder(orderData);
+        } else {
+          setOrder(orderData);
+        }
+      }
+    } catch (err) {
+      console.error("error while search active order", err);
     }
 
     handleClose();

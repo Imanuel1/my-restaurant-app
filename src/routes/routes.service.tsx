@@ -17,6 +17,7 @@ import MenuList from "../pages/MenuList/MenuList";
 import { MenuType } from "../parse/menu";
 import ManageMenus from "../pages/ManageMenus/ManageMenus";
 import Reports from "../pages/reports/Reports";
+import HistoryOrder from "../pages/HistoryOrder/HistoryOrder";
 
 // MyOrder.tsx
 {
@@ -89,6 +90,11 @@ export const userRoutes = {
         label: "אפליקציית שדרות היסע",
         element: <Reports />,
       },
+      {
+        path: "/history",
+        label: "אפליקציית שדרות היסע",
+        element: <HistoryOrder />,
+      },
       // {
       //   path: "/logout",
       //   label: "אפליקציית שדרות היסע",
@@ -127,6 +133,11 @@ export const userRoutes = {
         label: "אפליקציית שדרות היסע",
         element: <ManageMenus dishType={foodType} />,
       },
+      {
+        path: "/history",
+        label: "אפליקציית שדרות היסע",
+        element: <HistoryOrder />,
+      },
       // {
       //   path: "/logout",
       //   label: "אפליקציית שדרות היסע",
@@ -159,6 +170,11 @@ export const userRoutes = {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
         element: <Payment />,
+      },
+      {
+        path: "/history",
+        label: "אפליקציית שדרות היסע",
+        element: <HistoryOrder />,
       },
       // {
       //   path: "/logout",

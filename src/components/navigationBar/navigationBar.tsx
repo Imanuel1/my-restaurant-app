@@ -181,6 +181,17 @@ const NavbarHook = ({}) => {
             </NavLink>
           </li>
         ) : null}
+        {activeUser?.attributes?.role ? (
+          <li>
+            <NavLink
+              to="/history"
+              className={linkClassName}
+              onClick={closeMobileMenu}
+            >
+              היסטוריית הזמנות
+            </NavLink>
+          </li>
+        ) : null}
         {activeUser?.attributes?.role === "manager" ? (
           <li>
             <NavLink
@@ -200,11 +211,11 @@ const NavbarHook = ({}) => {
               ]
             } ${activeUser.getUsername()}`}</span>
             <NavLink
-              to="/logout"
+              to="/menu"
               className={`${linkClassName} ${buttonClassName}`}
               onClick={() => {
                 logout();
-                navigate("/"); // Replace "/" with your actual home page route
+                navigate("/menu"); // Replace "/" with your actual home page route
                 closeMobileMenu();
               }}
             >

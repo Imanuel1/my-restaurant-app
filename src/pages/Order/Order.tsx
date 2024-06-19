@@ -50,9 +50,7 @@ export default function Order() {
   const [tableNumber, setTableNumber] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    setIsLoading(true);
-    //request for order of the current user
+  const getOrdersRequset = () => {
     const userType = activeUser?.attributes?.role || "";
     getOrders(activeUser?.id || "", userType)
       .then((res) => {
@@ -61,6 +59,12 @@ export default function Order() {
       })
       .catch((err) => console.error("error while getOrders :", err))
       .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    //request for order of the current user
+    getOrdersRequset();
   }, []);
 
   //clear local storage +
@@ -77,7 +81,10 @@ export default function Order() {
     //TODO: table number
     if (currentOrder) {
       createOrder(currentOrder?.menuItems, activeUser?.id, tableNumber)
-        .then((res) => console.log("res createOrder :", res))
+        .then((res) => {
+          console.log("res createOrder :", res);
+          getOrdersRequset();
+        })
         .catch((err) => console.log("error whike create order", err))
         .finally(() => setIsLoading(false));
     }
@@ -111,6 +118,14 @@ export default function Order() {
     );
   }
 
+  const sumCost =
+    orderData && orderData?.[0]?.order?.cost
+      ? orderData[0].order.cost
+      : currentOrder?.menuItems?.reduce(
+          (acc, menu) => acc + menu.cost * menu.units,
+          0
+        );
+
   return (
     <div className="c-orders-container">
       {!activeUser || activeUser?.attributes?.role === "client" ? (
@@ -127,6 +142,13 @@ export default function Order() {
                   const menuId = (value as any)?.menuId || (value as any)?.id;
                   const title = (value as any)?.name || (value as any)?.title;
                   const labelId = `checkbox-list-label-${menuId}`;
+                  const menuUnits =
+                    (value as any)?.units ||
+                    (orderData &&
+                      orderData[0].order?.statusOrder?.[index].units) ||
+                    0;
+                  const menuCost =
+                    (value as any)?.cost || (value as any)?.price || 0;
 
                   let orderStatusitem: {
                     [key in string]: getOrdersType["order"]["statusOrder"][number];
@@ -182,6 +204,28 @@ export default function Order() {
                                 תיאור -
                               </Typography>
                               <span>{value.description}</span>
+                              <div>
+                                <Typography
+                                  sx={{ display: "inline" }}
+                                  component="span"
+                                  variant="body2"
+                                  color="text.primary"
+                                >
+                                  כמות -
+                                </Typography>
+                                <span>{menuUnits}</span>
+                              </div>
+                              <div>
+                                <Typography
+                                  sx={{ display: "inline" }}
+                                  component="span"
+                                  variant="body2"
+                                  color="text.primary"
+                                >
+                                  מחיר -
+                                </Typography>
+                                <span>{`${menuUnits * menuCost} ₪`}</span>
+                              </div>
                               {value.comments ? (
                                 <>
                                   <Typography
@@ -197,21 +241,6 @@ export default function Order() {
                               ) : null}
                               {Object.keys(orderStatusitem).length ? (
                                 <div className="stepper-holder">
-                                  {/* <Typography
-                                    sx={{ display: "inline" }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                  >
-                                    סטאטוס מנה -
-                                  </Typography>
-                                  <span>
-                                    {
-                                      statusTranslate[
-                                        orderStatusitem?.[menuId].status
-                                      ]
-                                    }
-                                  </span> */}
                                   <StepperStatus
                                     orderId={
                                       (visibleOrderList?.[0] as any)?.order
@@ -231,15 +260,28 @@ export default function Order() {
                             sx={{ width: "max-content", padding: "7px" }}
                             edge="start"
                             aria-label="comments"
+                            onClick={() => {
+                              const localOrder = {
+                                userId: currentOrder?.userId,
+                                menuItems: [...(currentOrder?.menuItems || [])],
+                              };
+                              localOrder?.menuItems &&
+                                localOrder.menuItems.splice(index, 1);
+                              setOrder(localOrder);
+                            }}
                           >
                             <DeleteIcon />
                           </IconButton>
                         ) : null}
                         {/* </ListItemButton> */}
                       </ListItem>
-                      {orderData && orderData.length - 1 !== index ? (
+                      {visibleOrderList && visibleOrderList.length === index ? (
+                        <h3
+                          style={{ width: "100%", textAlign: "center" }}
+                        >{`מחיר כולל - ${sumCost || 0} ₪`}</h3>
+                      ) : (
                         <Divider variant="inset" component="li" />
-                      ) : null}
+                      )}
                     </div>
                   );
                 }

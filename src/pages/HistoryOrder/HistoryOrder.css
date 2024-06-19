@@ -1,0 +1,109 @@
+/* .c-orders-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.item-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-container .MuiListItemText-root p {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.c-orders-container > ul {
+  box-shadow: var(--cb-shadow-xsmall);
+}
+
+.c-orders-container > .c-button-container {
+  margin: 1rem;
+  text-align: center;
+}
+
+.c-button-container > button > span {
+  margin-left: 8px;
+  margin-right: -4px;
+}
+
+.no-order-data {
+  padding: 16px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-container > .MuiListItem-root > .MuiListItemText-root {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: 16px;
+}
+
+.item-container
+  > .MuiListItem-root
+  > .MuiListItemSecondaryAction-root
+  > .MuiListItemAvatar-root {
+  justify-content: flex-start;
+}
+
+.item-container > .MuiListItem-root > .MuiListItemText-root > p {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+} */
+
+.c-orders-container {
+  width: 100%;
+  height: 100%;
+}
+
+.item-container {
+  display: flex;
+  flex-direction: column;
+}
+.item-container > .MuiDivider-root {
+  width: 100%;
+}
+
+.c-orders-container > ul {
+  box-shadow: var(--cb-shadow-xsmall);
+}
+
+.c-orders-container > .c-button-container {
+  margin: 1rem;
+  text-align: center;
+}
+
+.c-button-container > button > span {
+  margin-left: 8px;
+  margin-right: -4px;
+}
+
+.no-order-data {
+  padding: 16px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MuiCollapse-root {
+  padding: 10px;
+}
+.manager-order-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.manager-order-item > .MuiListItemAvatar-root {
+  justify-content: flex-start;
+}
+
+/* .MuiListItemText-root > p >; */
