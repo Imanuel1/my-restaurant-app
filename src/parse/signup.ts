@@ -46,9 +46,23 @@ export const createUserWithRole = async (
   }
 };
 
+function convertDateFormat(dateString: string): string {
+  // Split the date string by the separator (".")
+  const dateParts = dateString.split(".");
+
+  // Check for valid input format (3 parts)
+  if (dateParts.length !== 3) {
+    throw new Error("Invalid date format. Expected 'DD.MM.YYYY'.");
+  }
+
+  // Swap day and month positions and join with a new separator ("/")
+  return `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
+}
+
 export const parseSignUp = async (
   username: string,
   email: string,
+  birthday: string,
   password: string
 ): Promise<Parse.User | null> => {
   try {
@@ -56,6 +70,8 @@ export const parseSignUp = async (
     user.setUsername(username);
     user.setEmail(email);
     user.setPassword(password);
+
+    user.set("birthday", convertDateFormat(birthday));
 
     const createdUser = await user.signUp();
     alert(

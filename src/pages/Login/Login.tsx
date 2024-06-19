@@ -42,9 +42,12 @@ const LoginForm: React.FC = () => {
   } = useForm({ resolver: yupResolver(validationSchema) });
 
   const onSubmit = (data: LoginFormData) => {
-    login(data.email, data.password);
-    setSubmitted(true);
-    console.log(data); // Replace with your login logic (e.g., API call)
+    if (!Object.keys(errors)?.length) {
+      login(data.email, data.password);
+      setSubmitted(true);
+    }
+    console.log("login errors: ", errors); // Replace with your login logic (e.g., API call)
+    console.log("login data: ", data); // Replace with your login logic (e.g., API call)
   };
 
   useEffect(() => {

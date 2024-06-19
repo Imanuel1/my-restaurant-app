@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 interface SignupFormData {
   email: string;
   name: string;
-  lastName: string;
+  birthday: string;
   password: string;
   confirmPassword: string;
 }
@@ -32,7 +32,10 @@ const validationSchema = yup.object({
     .string()
     .max(20, "Name cannot exceed 20 characters")
     .required("Name is required"),
-  lastName: yup.string().required("Last name is required"),
+  birthday: yup
+    .string()
+    .required("Birthday is required")
+    .matches(/^\d{2}\.\d{2}\.\d{4}$/, "Invalid birthday format (DD.MM.YYYY)"), // Birthday validation
   password: yup
     .string()
     .required("Password is required")
@@ -58,10 +61,13 @@ const SignupForm: React.FC = () => {
 
   const navigate = useNavigate();
   const onSubmit = (data: SignupFormData) => {
-    const { email, name, lastName, password } = data;
-    signup({ email, name, lastName, password });
-    setSubmitted(true);
-    console.log(data); // Replace with your form submission logic
+    if (!Object.keys(errors)?.length) {
+      const { email, name, birthday, password } = data;
+      signup({ email, name, birthday, password });
+      setSubmitted(true);
+    }
+    console.log("login errors: ", errors); // Replace with your login logic (e.g., API call)
+    console.log("login data: ", data); // Replace with your login logic (e.g., API call)
   };
 
   useEffect(() => {
@@ -75,28 +81,29 @@ const SignupForm: React.FC = () => {
       <h1>הרשמה למערכת</h1>
       <TextField
         {...register("email", { required: true })}
-        label="Email"
+        label="אימייל"
         error={!!errors.email} // Concise error handling
         helperText={errors.email?.message} // Display specific error message
         className={errors.password ? "errorInput" : ""}
       />
       <TextField
         {...register("name", { required: true, maxLength: 20 })}
-        label="Name"
+        label="שם מלא"
         error={!!errors.name}
         helperText={errors.name?.message}
         className={errors.password ? "errorInput" : ""}
       />
       <TextField
-        {...register("lastName", { required: true })}
-        label="Last Name"
-        error={!!errors.lastName}
-        helperText={errors.lastName?.message}
+        {...register("birthday", { required: true })}
+        label="תאריך לידה"
+        placeholder="12.2.1995"
+        error={!!errors.birthday}
+        helperText={errors.birthday?.message}
         className={errors.password ? "errorInput" : ""}
       />
       <TextField
         {...register("password", { required: true })}
-        label="Password"
+        label="סיסמה"
         type="password"
         error={!!errors.password}
         helperText={errors.password?.message}
@@ -104,14 +111,14 @@ const SignupForm: React.FC = () => {
       />
       <TextField
         {...register("confirmPassword", { required: true })}
-        label="Confirm Password"
+        label="אימות סיסמה"
         type="password"
         error={!!errors.confirmPassword}
         helperText={errors.confirmPassword?.message}
         className={errors.password ? "errorInput" : ""}
       />
       <Button type="submit" variant="contained" disabled={submitted}>
-        Sign Up
+        הרשמה
       </Button>
       {submitted && <p>Form submitted successfully!</p>}
     </form>

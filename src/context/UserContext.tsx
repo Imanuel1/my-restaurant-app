@@ -18,12 +18,12 @@ const UserContext = createContext({
   signup: ({
     email,
     name,
-    lastName,
+    birthday,
     password,
   }: {
     email: string;
     name: string;
-    lastName: string;
+    birthday: string;
     password: string;
   }) => {},
   login: (email: string, password: string) => {},
@@ -38,12 +38,12 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const editUser = ({
     name,
     role,
-    lastName,
+    birthday,
     password,
   }: {
     name?: string;
     role?: "client" | "worker" | "manager";
-    lastName?: string;
+    birthday?: string;
     password?: string;
   }) => {
     //create user with parse
@@ -53,13 +53,13 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     email,
     name,
     role,
-    lastName,
+    birthday,
     password,
   }: {
     email: string;
     name: string;
     role: "client" | "worker" | "manager";
-    lastName: string;
+    birthday: string;
     password: string;
   }) => {
     //create user with parse
@@ -68,15 +68,15 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const signup = async ({
     email,
     name,
-    lastName,
+    birthday,
     password,
   }: {
     email: string;
     name: string;
-    lastName: string;
+    birthday: string;
     password: string;
   }) => {
-    const newUser = await parseSignUp(name, email, password);
+    const newUser = await parseSignUp(name, email, password, birthday);
     console.log("this is new user :", newUser);
 
     setActiveUser(newUser);
@@ -97,7 +97,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const isLogout = await parseLogout();
     if (isLogout) {
       setActiveUser(null);
-      // window.location.replace("/menu");
+      window.location.reload();
     }
   };
 

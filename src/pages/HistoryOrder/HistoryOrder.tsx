@@ -193,7 +193,7 @@ export default function HistoryOrder() {
                     <ListItemText
                       id={labelId}
                       primary={`הזמנה מס' ${index}  -  מזמין  ${
-                        value.order?.userName
+                        value.order?.userName || "אורח"
                       }  -  תאריך  ${new Date(
                         value.order.createdAt
                       ).toLocaleDateString()} - `}
@@ -201,7 +201,9 @@ export default function HistoryOrder() {
                     <ListItemText
                       primary={
                         <>
-                          {value.order?.statusOrder?.length ? (
+                          {value.order?.statusOrder?.length &&
+                          (!activeUser ||
+                            activeUser?.attributes?.role === "client") ? (
                             <ButtonX
                               Icon={{
                                 IconName: PublishedWithChangesIcon,

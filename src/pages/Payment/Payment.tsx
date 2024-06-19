@@ -12,6 +12,7 @@ import cash from "../../assets/images/payment-cash.png";
 import { createOrderHistory } from "../../parse/orderHistory";
 import { UserContext } from "../../context/UserContext";
 import { getOrders, getOrdersType } from "../../parse/order";
+import { isMyBirthday } from "../../utils/utils";
 
 const Payment: React.FC = () => {
   const [value, setValue] = useState<string>("Bit");
@@ -72,7 +73,27 @@ const Payment: React.FC = () => {
   return (
     <div className="c-payment-container">
       <h2>{`תשלום עבור הזמנה מס ${orderData?.[0]?.order?.id}`}</h2>
-      <h2>{`סה"כ תשלום ${orderData?.[0]?.order.cost} ₪`}</h2>
+      <h2>
+        {isMyBirthday(new Date(activeUser?.attributes?.birthday)) ? (
+          <>
+            <h2 style={{ display: "inline" }}>{' סה"כ תשלום'}</h2>
+            <h3
+              style={{
+                textDecorationLine: "line-through",
+                display: "inline",
+                margin: "0px 7px",
+              }}
+            >
+              {`${orderData?.[0]?.order.cost} ₪`}
+            </h3>
+            <h2 style={{ display: "inline" }}>{` ${
+              orderData?.[0]?.order.cost * 0.85
+            } ₪  (15% הנחה)`}</h2>
+          </>
+        ) : (
+          `סה"כ תשלום ${orderData?.[0]?.order.cost} ₪`
+        )}
+      </h2>
       <div className="payment-option">
         <h2>בחירת תצורת התשלום:</h2>
         <div className="images-holder">
