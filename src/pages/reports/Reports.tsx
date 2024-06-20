@@ -18,9 +18,7 @@ const Reports = () => {
     const menuIds: string[] = []; //all the ids that in history
     const paymentCount: { Cash: number; Bit: number } = { Cash: 0, Bit: 0 }; //all the ids that in history
     orders.forEach((order) => {
-      if (
-        paymentCount?.[order?.order?.paymentOption as keyof typeof paymentCount]
-      ) {
+      if (order?.order?.paymentOption) {
         paymentCount[
           order.order.paymentOption as keyof typeof paymentCount
         ] += 1;
@@ -45,25 +43,48 @@ const Reports = () => {
       .map((menu) => ({ id: menu[0], count: menu[1] })); // Extract just IDs
 
     const colMostOrdered: GridColDef[] = [
-      { field: "id", headerName: "#", type: "string" },
-      { field: "menu", headerName: "שם מנה", type: "string" },
-      { field: "count", headerName: "מס' הפעמים שהוזמנה", type: "number" },
+      { field: "id", headerName: "#", type: "string", headerAlign: "center" },
+      {
+        field: "menu",
+        headerName: "שם מנה",
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "count",
+        headerName: "מס' הפעמים שהוזמנה",
+        type: "number",
+        width: 200,
+        headerAlign: "center",
+      },
     ];
     const rowMostOrdered: GridRowsProp = sortedMenuIds.map((menuId, index) => ({
       [colMostOrdered[0].field]: index + 1,
       [colMostOrdered[1].field]: menuDictionary.get(menuId.id),
       [colMostOrdered[2].field]: menuId.count,
+      align: "center",
     }));
     const colPayment: GridColDef[] = [
-      { field: "id", headerName: "#", type: "string" },
-      { field: "bit", headerName: "תשלום בביט", type: "number" },
-      { field: "cash", headerName: "תשלום במזומן", type: "number" },
+      { field: "id", headerName: "#", type: "string", headerAlign: "center" },
+      {
+        field: "bit",
+        headerName: "תשלום בביט",
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "cash",
+        headerName: "תשלום במזומן",
+        type: "string",
+        headerAlign: "center",
+      },
     ];
     const rowPayment: GridRowsProp = [
       {
-        [colMostOrdered[0].field]: 1,
-        [colMostOrdered[1].field]: paymentCount.Bit,
-        [colMostOrdered[2].field]: paymentCount.Cash,
+        [colPayment[0].field]: 1,
+        [colPayment[1].field]: paymentCount.Bit,
+        [colPayment[2].field]: paymentCount.Cash,
+        align: "center",
       },
     ];
     // const colMostOrdered: GridColDef[] = [{field: "#", type: "string"}, {field: "menu", headerName: "שם מנה", type: "string"}];

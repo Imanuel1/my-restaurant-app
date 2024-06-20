@@ -162,6 +162,7 @@ export const getOrders = async (
       orderQuery.equalTo("tableNumber", Number(tableNumber));
     }
 
+    orderQuery.include("userId");
     orderQuery.include("menuIds");
 
     const orderResults = await orderQuery.find();
@@ -188,7 +189,13 @@ export const updateOrder = async ({
   tableNumber,
 }: {
   id: string;
-  menuItems?: { menuId: string; menuName: string; units: number, cost:number; comments: string; }[];
+  menuItems?: {
+    menuId: string;
+    menuName: string;
+    units: number;
+    cost: number;
+    comments: string;
+  }[];
   cost?: number;
   tableNumber?: number;
 }) => {

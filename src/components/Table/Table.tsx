@@ -15,7 +15,16 @@ const DataGridTable: FC<props> = ({ tableData: { title, rows, columns } }) => {
     <div className="table-container">
       <span className="table-title">{title}</span>
       <div style={{ height: 350, width: "100%" }}>
-        <DataGrid rows={rows} columns={columns} hideFooter />
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          hideFooter
+          sx={{
+            "& .MuiDataGrid-row": {
+              alignItems: "center",
+            },
+          }}
+        />
       </div>
     </div>
   );
