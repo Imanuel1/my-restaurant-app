@@ -56,6 +56,7 @@ export default function ManageOrder({
         {orderData?.length > 0 ? (
           orderData?.map((value: getOrdersType, index: number) => {
             const labelId = `checkbox-list-label-${value.order.id}`;
+            console.log("this is userId relation -", value.order?.userId);
 
             return (
               <Fragment key={index}>
@@ -67,7 +68,8 @@ export default function ManageOrder({
                       primary={`הזמנה מס' שולחן ${
                         value.order.tableNumber
                       } - מזמין  ${
-                        (value.order.userId as any).attributes.username
+                        (value.order?.userId as any)?.attributes?.username ||
+                        "אורח"
                       }`}
                     />
                     <ListItemText

@@ -14,15 +14,27 @@ const DataGridTable: FC<props> = ({ tableData: { title, rows, columns } }) => {
   return (
     <div className="table-container">
       <span className="table-title">{title}</span>
-      <div style={{ height: 350, width: "100%" }}>
+      <div style={{ height: "max-content", width: "100%", direction: "rtl" }}>
         <DataGrid
           rows={rows}
           columns={columns}
           hideFooter
           sx={{
-            "& .MuiDataGrid-row": {
+            "& .MuiDataGrid-row  .MuiDataGrid-cell": {
               alignItems: "center",
+              textAlign: "center",
             },
+            "& .MuiDataGrid-row": {
+              minWidth: "max-content",
+            },
+            // "& .MuiDataGrid-columnHeaders > div": {
+            //   display: "flex",
+            //   flexDirection: "revert",
+            // },
+            // "& .MuiDataGrid-columnHeaders ": {
+            //   display: "flex",
+            //   flexDirection: "revert",
+            // },
           }}
         />
       </div>
