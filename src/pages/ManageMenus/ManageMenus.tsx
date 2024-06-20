@@ -10,6 +10,7 @@ import EditableCard from "../../components/editableCard/EditableCard";
 import ButtonX from "../../components/buttonCustom/ButtonX";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import UndoIcon from "@mui/icons-material/Undo";
 
 const ManageMenus = ({
   dishType,
@@ -71,7 +72,14 @@ const ManageMenus = ({
       <div className="c-main-page">
         {selectType ? (
           <div>
-            <span className="type-title">{selectType.label}</span>
+            <span className="type-title">
+              {selectType.label}{" "}
+              <ButtonX
+                Icon={{ IconName: UndoIcon }}
+                style={{ margin: "0px 16px" }}
+                onClick={() => setSelectType(undefined)}
+              />
+            </span>
             <span className="crud-buttons">
               <Tooltip title="מחק">
                 <ButtonX
