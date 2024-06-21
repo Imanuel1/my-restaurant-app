@@ -19,22 +19,16 @@ const DataGridTable: FC<props> = ({ tableData: { title, rows, columns } }) => {
           rows={rows}
           columns={columns}
           hideFooter
+          disableVirtualization
           sx={{
             "& .MuiDataGrid-row  .MuiDataGrid-cell": {
-              alignItems: "center",
               textAlign: "center",
             },
-            "& .MuiDataGrid-row": {
-              minWidth: "max-content",
-            },
-            // "& .MuiDataGrid-columnHeaders > div": {
-            //   display: "flex",
-            //   flexDirection: "revert",
-            // },
-            // "& .MuiDataGrid-columnHeaders ": {
-            //   display: "flex",
-            //   flexDirection: "revert",
-            // },
+            "& .MuiDataGrid-virtualScrollerContent > .MuiDataGrid-virtualScrollerRenderZone":
+              {
+                position: "absolute !important",
+                // minWidth: "fit-content !important",
+              },
           }}
         />
       </div>

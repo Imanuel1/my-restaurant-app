@@ -57,6 +57,22 @@
   align-items: center;
 }
 
+.fade-in {
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.6s ease-in-out; /* Smooth fade-in animation */
+
+  position: absolute;
+  bottom: 15px;
+  left: 55%;
+  border: 1px solid grey;
+}
+
+.fade-in.show {
+  /* opacity: 1; Fully visible after animation */
+
+  opacity: 0.5;
+}
+
 @media screen and (max-width: 450px) {
   .payment-option > .images-holder > img {
     width: 150px;

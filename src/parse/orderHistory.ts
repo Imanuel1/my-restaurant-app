@@ -10,7 +10,8 @@ export enum StatuMenuType {
 
 export const createOrderHistory = async (
   orderId: string,
-  paymentOption: string // "Bit" | "Cash"
+  paymentOption: string, // "Bit" | "Cash"
+  rating: number | undefined
 ) => {
   try {
     const orderQuery = new Parse.Query("Order");
@@ -33,6 +34,7 @@ export const createOrderHistory = async (
       }
       const orderMenus = await getOrderWithMenus(order);
 
+      rating && orderHistory.set("rating", rating);
       orderHistory.set("tableNumber", order.get("tableNumber"));
       orderHistory.set("menuItems", orderMenus?.menuItems);
       orderHistory.set("menuIds", order.attributes.menuIds); // Assuming menuIds is a Relation

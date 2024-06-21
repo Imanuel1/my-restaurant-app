@@ -9,23 +9,29 @@ import "./Payment.css";
 import { PaymentApproveButton } from "../../components/animations/ConfettiEmoji/ConfettiEmoji";
 import bit from "../../assets/images/bit.png";
 import cash from "../../assets/images/payment-cash.png";
+import barcode from "../../assets/icons/barcode.png";
 import { createOrderHistory } from "../../parse/orderHistory";
 import { UserContext } from "../../context/UserContext";
 import { getOrders, getOrdersType } from "../../parse/order";
 import { isMyBirthday } from "../../utils/utils";
+import RadioGroupRating from "../../components/rating/Rating";
 
 const Payment: React.FC = () => {
   const [value, setValue] = useState<string>("Bit");
   const [orderData, setOrderData] = useState<getOrdersType[] | null>(null);
   const { activeUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [rating, setRating] = useState<number>();
 
   const handlePaymentClick = async () => {
+    console.log(" rating iii ", rating);
+
     if (orderData?.[0]) {
       setIsLoading(true);
       const isHistoryCreated = await createOrderHistory(
         orderData?.[0]?.order?.id,
-        value
+        value,
+        rating
       );
       console.log("is history created ?? :", isHistoryCreated);
       getCurrentOrder();
@@ -96,13 +102,22 @@ const Payment: React.FC = () => {
       </h2>
       <div className="payment-option">
         <h2>בחירת תצורת התשלום:</h2>
-        <div className="images-holder">
+        <div className="images-holder" style={{ position: "relative" }}>
           <img
             src={bit}
             className={value === "Bit" ? "selected" : ""}
             alt="Bit"
             onClick={() => setValue("Bit")}
           />
+          <div className={value !== "Bit" ? "fade-in" : "fade-in show"}>
+            <img
+              style={{
+                width: "100px",
+              }}
+              src={barcode}
+              alt="barcode"
+            />
+          </div>
           <img
             src={cash}
             className={value === "Cash" ? "selected" : ""}
@@ -122,17 +137,21 @@ const Payment: React.FC = () => {
             <FormControlLabel
               value="Bit"
               control={<Radio />}
-              label="Bit"
+              label="ביט"
               labelPlacement="top"
             />
             <FormControlLabel
               value="Cash"
               control={<Radio />}
-              label="Cash"
+              label="מזומן"
               labelPlacement="top"
             />
           </RadioGroup>
         </FormControl>
+      </div>
+      <div style={{ display: "flex", margin: "20px" }}>
+        <h3 style={{ margin: "0px 10px" }}>איך נהנית מהביקור במסעדה? </h3>
+        <RadioGroupRating setRating={setRating} rating={rating} />
       </div>
       <PaymentApproveButton
         text="אישור תשלום"
