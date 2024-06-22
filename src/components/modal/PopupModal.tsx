@@ -73,7 +73,7 @@ const PopupModal: FC<props> = ({
           menuItems: [
             {
               menuId: id,
-              cost: price * units,
+              cost: price,
               units,
               comments,
               title,

@@ -234,7 +234,7 @@ export default function ManageOrder({
                                       מחיר -
                                     </Typography>
                                     <span>
-                                      {orderItem.cost * orderItem.units}
+                                      {`${orderItem.cost * orderItem.units} ₪`}
                                     </span>
                                   </div>
                                   {menuObject[orderItem.menuId].comments ? (

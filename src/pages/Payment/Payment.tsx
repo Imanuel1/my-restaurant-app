@@ -70,11 +70,14 @@ const Payment: React.FC = () => {
       </Box>
     );
   }
-
   //TODO: if have no order show -> no order!!
   if (!orderData?.[0]?.order) {
     return <span className="no-order-data">{"לא קיימים הזמנות עבורך!"}</span>;
   }
+  const totalCost = orderData?.[0]?.order.statusOrder.reduce((acc, status) => {
+    acc += acc + status.units * status.cost;
+    return acc;
+  }, 0);
 
   return (
     <div className="c-payment-container">
@@ -90,14 +93,14 @@ const Payment: React.FC = () => {
                 margin: "0px 7px",
               }}
             >
-              {`${orderData?.[0]?.order.cost} ₪`}
+              {`${totalCost} ₪`}
             </h3>
             <h2 style={{ display: "inline" }}>{` ${
-              orderData?.[0]?.order.cost * 0.85
+              totalCost * 0.85
             } ₪  (15% הנחה)`}</h2>
           </>
         ) : (
-          `סה"כ תשלום ${orderData?.[0]?.order.cost} ₪`
+          `סה"כ תשלום ${totalCost} ₪`
         )}
       </h2>
       <div className="payment-option">
