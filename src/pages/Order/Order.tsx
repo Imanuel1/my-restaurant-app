@@ -155,17 +155,10 @@ export default function Order() {
                   const menuId = (value as any)?.menuId || (value as any)?.id;
                   const title = (value as any)?.name || (value as any)?.title;
                   const labelId = `checkbox-list-label-${menuId}`;
-                  const menuUnits =
-                    (value as any)?.units ||
-                    (orderData &&
-                      orderData[0].order?.statusOrder?.[index].units) ||
-                    0;
-                  const menuCost =
-                    (value as any)?.cost || (value as any)?.price || 0;
-
                   let orderStatusitem: {
                     [key in string]: getOrdersType["order"]["statusOrder"][number];
                   } = {};
+
                   //if is order that sent to kitchen
                   if ((visibleOrderList[0] as getOrdersType)?.order) {
                     orderStatusitem = (
@@ -179,6 +172,12 @@ export default function Order() {
                     );
                   }
 
+                  const menuUnits =
+                    (orderData && orderStatusitem[(value as any)?.id].units) ||
+                    (value as any)?.units ||
+                    0;
+                  const menuCost =
+                    (value as any)?.cost || (value as any)?.price || 0;
                   return (
                     <div className="item-container" key={index}>
                       <ListItem

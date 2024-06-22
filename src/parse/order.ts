@@ -41,7 +41,10 @@ export const createOrder = async (
       })
     );
     const menuIds = menuItems.map((item) => item.menuId);
-    const cost = menuItems.reduce((acc, item) => acc + item.cost, 0);
+    const cost = menuItems.reduce(
+      (acc, item) => acc + item.cost * item.units,
+      0
+    );
     order.set("statusOrder", statusOrder);
     order.set("cost", cost);
     order.set("tableNumber", tableNumber);
