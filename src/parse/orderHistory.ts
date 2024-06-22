@@ -22,7 +22,7 @@ export const createOrderHistory = async (
 
     if (order) {
       const orderHistory = new Parse.Object("OrderHistory");
-      const userId = String(order.get("userId").id);
+      const userId = String(order.get("userId")?.id || "");
       if (userId) {
         const userQuery = new Parse.Query("_User");
         userQuery.equalTo("objectId", userId);

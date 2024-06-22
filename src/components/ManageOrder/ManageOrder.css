@@ -46,3 +46,10 @@
 }
 
 /* .MuiListItemText-root > p >; */
+
+.item-container > .MuiButtonBase-root > .MuiListItemText-root {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -65,6 +65,19 @@ export default function Order() {
     setIsLoading(true);
     //request for order of the current user
     getOrdersRequset();
+    const intervalId = setInterval(() => {
+      if (
+        (localStorage.getItem("tableNumber") &&
+          (activeUser?.attributes?.role === "client" ||
+            !activeUser?.attributes?.role)) ||
+        activeUser?.attributes?.role === "manger" ||
+        activeUser?.attributes?.role === "worker"
+      ) {
+        setIsLoading(true);
+        getOrdersRequset();
+      }
+    }, 60000);
+    return () => clearInterval(intervalId);
   }, []);
 
   //clear local storage +
@@ -275,11 +288,8 @@ export default function Order() {
                         ) : null}
                         {/* </ListItemButton> */}
                       </ListItem>
-                      {visibleOrderList && visibleOrderList.length === index ? (
-                        <h3
-                          style={{ width: "100%", textAlign: "center" }}
-                        >{`מחיר כולל - ${sumCost || 0} ₪`}</h3>
-                      ) : (
+                      {visibleOrderList &&
+                      visibleOrderList.length === index ? null : (
                         <Divider variant="inset" component="li" />
                       )}
                     </div>
@@ -289,10 +299,16 @@ export default function Order() {
             ) : (
               <span className="no-order-data">{"לא נבחרו מנות להזמנה!"}</span>
             )}
+            {!localStorage.getItem("tableNumber") &&
+            (activeUser?.attributes?.role === "client" ||
+              !activeUser?.attributes?.role) ? (
+              <h3
+                style={{ width: "100%", textAlign: "center" }}
+              >{`מחיר כולל - ${sumCost || 0} ₪`}</h3>
+            ) : null}
           </List>
           {
             //isOrderSent ? order status : button send order to operate!
-
             currentOrder &&
             currentOrder?.menuItems?.length > 0 &&
             !orderData?.length ? (

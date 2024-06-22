@@ -7,6 +7,9 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { Avatar, ListItemAvatar } from "@mui/material";
@@ -17,6 +20,7 @@ import {
   getOrders,
   getOrdersType,
   StatuMenuType,
+  updateOrderStatus,
 } from "../../parse/order";
 import Collapse from "@mui/material/Collapse";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
@@ -50,6 +54,22 @@ export default function ManageOrder({
     });
   };
 
+  const handleUpdateStatus = async (
+    id: string,
+    menuId: string,
+    status: string
+  ) => {
+    const res = await updateOrderStatus({
+      id,
+      menuId,
+      status,
+    });
+
+    // if (res) {
+    //   refetchOrder()
+    // }
+  };
+
   return (
     <div className="c-orders-container">
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -57,7 +77,13 @@ export default function ManageOrder({
           orderData?.map((value: getOrdersType, index: number) => {
             const labelId = `checkbox-list-label-${value.order.id}`;
             console.log("this is userId relation -", value.order?.userId);
-
+            const orderActiveStatuses = value.order.statusOrder.reduce(
+              (acc, status) => {
+                acc[status.status] = true;
+                return acc;
+              },
+              {} as { [key in StatuMenuType]: boolean }
+            );
             return (
               <Fragment key={index}>
                 <div className="item-container">
@@ -74,6 +100,62 @@ export default function ManageOrder({
                     />
                     <ListItemText
                       primary={`עלות הזמנה ${value.order.cost} ₪`}
+                      secondary={
+                        <div
+                          style={{
+                            display: "flex",
+                            margin: "10px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <h3>- סטאטוס מנות -</h3>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              margin: "10px",
+                              alignItems: "center",
+                            }}
+                          >
+                            {orderActiveStatuses.Completed && (
+                              <>
+                                <CheckCircleIcon color="success" />
+                                <span>מוכן</span>
+                              </>
+                            )}
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              margin: "10px",
+                              alignItems: "center",
+                            }}
+                          >
+                            {orderActiveStatuses.Preparing && (
+                              <>
+                                <PublishedWithChangesIcon color="info" />
+                                <span>בתהליך</span>
+                              </>
+                            )}
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              margin: "10px",
+                              alignItems: "center",
+                            }}
+                          >
+                            {orderActiveStatuses.Pending && (
+                              <>
+                                <PendingActionsIcon color="secondary" />
+                                <span>בהמתנה</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      }
                     />
                   </ListItemButton>
                   <Collapse
@@ -176,6 +258,7 @@ export default function ManageOrder({
                                         orderId={value.order.id}
                                         menuId={orderItem.menuId}
                                         status={orderItem.status}
+                                        handleUpdateStatus={handleUpdateStatus}
                                       />
                                     </div>
                                   ) : null}

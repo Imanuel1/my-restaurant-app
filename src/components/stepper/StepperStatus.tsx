@@ -20,6 +20,7 @@ interface props {
   orderId: string;
   menuId: string;
   status: string;
+  handleUpdateStatus?: (id: string, menuId: string, status: string) => void;
 }
 
 const statusTranslate = {
@@ -111,18 +112,23 @@ const ColorlibStepIconRoot = styled("div")<{
   }),
 }));
 
-const StepperStatus: FC<props> = ({ orderId, menuId, status }) => {
+const StepperStatus: FC<props> = ({
+  orderId,
+  menuId,
+  status,
+  handleUpdateStatus,
+}) => {
   const [activeStep, setActiveStep] = useState<number>(
     statusToIndex?.[status as StatuMenuType] as number
   );
   const { activeUser } = useContext(UserContext);
 
   useEffect(() => {
-    updateOrderStatus({
-      id: orderId,
+    handleUpdateStatus?.(
+      orderId,
       menuId,
-      status: indexToStatus[activeStep as keyof typeof indexToStatus] as string,
-    });
+      indexToStatus[activeStep as keyof typeof indexToStatus] as string
+    );
   }, [activeStep]);
 
   return (
