@@ -173,7 +173,7 @@ export default function Order() {
                   }
 
                   const menuUnits =
-                    (orderData && orderStatusitem[(value as any)?.id].units) ||
+                    (orderData && orderStatusitem[(value as any)?.id]?.units) ||
                     (value as any)?.units ||
                     0;
                   const menuCost =
