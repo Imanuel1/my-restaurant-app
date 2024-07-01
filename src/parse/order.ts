@@ -156,7 +156,6 @@ export const getOrders = async (
 
     const orderQuery: Parse.Query = new Parse.Query("Order");
     if (userType === "client") {
-      // orderQuery.include("userId");
       // orderQuery.equalTo("userId", userId);
       const tableNumber = localStorage.getItem("tableNumber");
       orderQuery.equalTo("tableNumber", Number(tableNumber));
@@ -170,10 +169,20 @@ export const getOrders = async (
 
     const orderResults = await orderQuery.find();
     console.log(" results :", orderResults);
-
-    const orderWithMenus = await Promise.all(
-      orderResults.map(async (order) => await getOrderWithMenus(order))
-    );
+    let orderWithMenus: any[];
+    if (userType === "client") {
+      const clientOrderResults = orderResults.filter(
+        (orderResult) =>
+          orderResult.attributes?.userId?.attributes?.role === "client"
+      );
+      orderWithMenus = await Promise.all(
+        clientOrderResults.map(async (order) => await getOrderWithMenus(order))
+      );
+    } else {
+      orderWithMenus = await Promise.all(
+        orderResults.map(async (order) => await getOrderWithMenus(order))
+      );
+    }
 
     console.log("this is order ralation res :", orderWithMenus);
 
