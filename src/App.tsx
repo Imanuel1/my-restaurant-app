@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Routes, Route, Navigate, HashRouter } from "react-router-dom";
 import "./App.css";
-import { UserProvider } from "./context/UserContext";
+import { UserContext, UserProvider } from "./context/UserContext";
 import NavigationBar from "./components/navigationBar/navigationBar";
 import { User } from "./interface/loggedUser";
 import { userRoutes } from "./routes/routes.service";
@@ -11,8 +11,9 @@ import { createUserWithRole } from "./parse/signup";
 import { OrderProvider } from "./context/OrderContext";
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(Parse.User.current() || null);
+  // const [currentUser, setCurrentUser] = useState(Parse.User.current() || null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { activeUser } = useContext(UserContext);
 
   useEffect(() => {
     const loadingTimer = setTimeout(() => setIsLoading(false), 3000);
@@ -20,8 +21,8 @@ const App = () => {
     return () => clearTimeout(loadingTimer);
   }, []);
 
-  const routes = currentUser?.attributes?.role
-    ? userRoutes[currentUser.attributes.role as keyof typeof userRoutes]
+  const routes = activeUser?.attributes?.role
+    ? userRoutes[activeUser.attributes.role as keyof typeof userRoutes]
     : userRoutes["guest"];
 
   if (isLoading) {
@@ -33,22 +34,20 @@ const App = () => {
 
   return (
     <div className="app-container">
-      <UserProvider>
-        <OrderProvider>
-          <HashRouter>
-            <NavigationBar />
-            <Routes>
-              <Route
-                path="/"
-                element={<Navigate to={routes.defaultRoute} replace />}
-              />
-              {routes.pages.map((page, index) => (
-                <Route key={index} path={page.path} element={page.element} />
-              ))}
-            </Routes>
-          </HashRouter>
-        </OrderProvider>
-      </UserProvider>
+      <OrderProvider>
+        <HashRouter>
+          <NavigationBar />
+          <Routes>
+            <Route
+              path="/"
+              element={<Navigate to={routes.defaultRoute} replace />}
+            />
+            {routes.pages.map((page, index) => (
+              <Route key={index} path={page.path} element={page.element} />
+            ))}
+          </Routes>
+        </HashRouter>
+      </OrderProvider>
     </div>
   );
 };

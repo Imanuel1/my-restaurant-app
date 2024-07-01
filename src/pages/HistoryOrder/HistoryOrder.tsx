@@ -192,7 +192,7 @@ export default function HistoryOrder() {
                     {isOpenItems[index] ? <ExpandLess /> : <ExpandMore />}
                     <ListItemText
                       id={labelId}
-                      primary={`הזמנה מס' ${index}  -  מזמין  ${
+                      primary={`הזמנה מס' ${index + 1}  -  מזמין  ${
                         value.order?.userName || "אורח"
                       }  -  תאריך  ${new Date(
                         value.order.createdAt
