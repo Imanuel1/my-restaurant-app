@@ -119,6 +119,7 @@ export interface getHistoryOrdersType {
     cost: number;
     paymentOption: string;
     tableNumber: number;
+    rating: number | undefined;
     createdAt: Date;
     updatedAt: Date;
   };

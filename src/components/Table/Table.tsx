@@ -14,7 +14,7 @@ const DataGridTable: FC<props> = ({ tableData: { title, rows, columns } }) => {
   return (
     <div className="table-container">
       <span className="table-title">{title}</span>
-      <div style={{ height: "max-content", width: "100%", direction: "rtl" }}>
+      <div style={{ height: "max-content", width: "99%", direction: "rtl" }}>
         <DataGrid
           rows={rows}
           columns={columns}

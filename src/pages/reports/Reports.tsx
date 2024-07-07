@@ -3,12 +3,14 @@ import React, { FC } from "react";
 import "./Reports.css";
 import { getOrders } from "../../parse/order";
 import { UserContext } from "../../context/UserContext";
-import { GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { GridCellParams, GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { IconContainerProps } from "@mui/material/Rating";
 import {
   getHistoryOrders,
   getHistoryOrdersType,
 } from "../../parse/orderHistory";
 import DataGridTable from "../../components/Table/Table";
+import { IconContainer, customIcons } from "../../components/rating/Rating";
 
 const Reports = () => {
   const [orders, setOrders] = useState<getHistoryOrdersType[]>([]);
@@ -50,7 +52,33 @@ const Reports = () => {
       November: 10,
       December: 11,
     };
-    orders.forEach((order) => {
+
+    const rateCount: {
+      avgRate: number;
+      count: number;
+      rate_5: number;
+      rate_4: number;
+      rate_3: number;
+      rate_2: number;
+      rate_1: number;
+      rate_0: number;
+    } = {
+      avgRate: 0,
+      count: 0,
+      rate_5: 0,
+      rate_4: 0,
+      rate_3: 0,
+      rate_2: 0,
+      rate_1: 0,
+      rate_0: 0,
+    };
+
+    const renderCellContent = (params: GridCellParams<any>) => {
+      const value = params.value;
+      return IconContainer({ value } as IconContainerProps);
+    };
+
+    orders.forEach((order, index) => {
       if (order?.order?.paymentOption) {
         paymentCount[
           order.order.paymentOption as keyof typeof paymentCount
@@ -62,11 +90,28 @@ const Reports = () => {
         months[monthToIndex[orderrMonth]].count[
           order.order.paymentOption as keyof typeof paymentCount
         ] += order.order.cost;
+        switch (order.order?.rating) {
+          case undefined:
+            rateCount.rate_0 += 1;
+            break;
+          case 5:
+          case 4:
+          case 3:
+          case 2:
+          case 1:
+            rateCount[`rate_${order.order.rating}`] += 1;
+            rateCount.count += 1;
+            rateCount.avgRate += order.order.rating;
+            break;
+        }
       }
       order?.order.statusOrder?.forEach(({ menuId, menuName }) => {
         menuIds.push(menuId);
         menuDictionary.set(menuId, menuName);
       });
+      if (orders.length - 1 === index) {
+        rateCount.avgRate = rateCount.avgRate / rateCount.count;
+      }
     });
     // Count occurrences of each menu ID
     const menuIdCounts = menuIds.reduce(
@@ -146,7 +191,7 @@ const Reports = () => {
         headerAlign: "center",
       });
     });
-    let rowMoney: GridRowsProp = [
+    const rowMoney: GridRowsProp = [
       {
         [colMoney[0].field]: 1,
         [colMoney[1].field]: "ביט",
@@ -200,6 +245,114 @@ const Reports = () => {
       },
     ];
 
+    const colRating: GridColDef[] = [
+      { field: "id", headerName: "#", type: "string", headerAlign: "center" },
+      {
+        field: "avgRate",
+        renderHeader: () => {
+          console.log("rate avg :", Math.round(rateCount.avgRate));
+
+          return (
+            <>
+              <span>{`ציון ממוצע -`}</span>
+              {/* {IconContainer({
+              value: Math.round(rateCount.avgRate),
+            } as IconContainerProps)} */}
+              {Math.round(rateCount.avgRate) ? (
+                <span>{customIcons[Math.round(rateCount.avgRate)].icon}</span>
+              ) : null}
+            </>
+          );
+        },
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "count",
+        headerName: "כמות דירוגים",
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "rate_5",
+        renderHeader: () => (
+          <>
+            <span>{`דירוג 5 -`}</span>
+            {/* {IconContainer({ value: 5 } as IconContainerProps)} */}
+            <span>{customIcons[5].icon}</span>
+          </>
+        ),
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "rate_4",
+        renderHeader: () => (
+          <>
+            <span>{`דירוג 4 -`}</span>
+            {/* {IconContainer({ value: 4 } as IconContainerProps)} */}
+            <span>{customIcons[4].icon}</span>
+          </>
+        ),
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "rate_3",
+        renderHeader: () => (
+          <>
+            <span>{`דירוג 3 -`}</span>
+            {/* {IconContainer({ value: 3 } as IconContainerProps)} */}
+            <span>{customIcons[3].icon}</span>
+          </>
+        ),
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "rate_2",
+        renderHeader: () => (
+          <>
+            <span>{`דירוג 2 -`}</span>
+            {/* {IconContainer({ value: 2 } as IconContainerProps)} */}
+            <span>{customIcons[2].icon}</span>
+          </>
+        ),
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "rate_1",
+        renderHeader: () => (
+          <>
+            <span>{`דירוג 1 -`}</span>
+            <span>{customIcons[1].icon}</span>
+          </>
+        ),
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "rate_0",
+        headerName: "לא דירגו",
+        type: "string",
+        headerAlign: "center",
+      },
+    ];
+    const rowRating: GridRowsProp = [
+      {
+        [colRating[0].field]: 1,
+        [colRating[1].field]: Math.round(rateCount.avgRate * 10) / 10,
+        [colRating[2].field]: rateCount.count,
+        [colRating[3].field]: rateCount.rate_5,
+        [colRating[4].field]: rateCount.rate_4,
+        [colRating[5].field]: rateCount.rate_3,
+        [colRating[6].field]: rateCount.rate_2,
+        [colRating[7].field]: rateCount.rate_1,
+        [colRating[8].field]: rateCount.rate_0,
+        align: "center",
+      },
+    ];
     // const colMostOrdered: GridColDef[] = [{field: "#", type: "string"}, {field: "menu", headerName: "שם מנה", type: "string"}];
 
     return [
@@ -217,6 +370,11 @@ const Reports = () => {
         title: "ההכנסות החודשיות במסעדה",
         columns: colMoney,
         rows: rowMoney,
+      },
+      {
+        title: "דירוג המסעדה",
+        columns: colRating,
+        rows: rowRating,
       },
     ];
   }, [orders]);

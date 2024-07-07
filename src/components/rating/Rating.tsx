@@ -14,7 +14,7 @@ const StyledRating = styled(Rating)(({ theme }) => ({
   },
 }));
 
-const customIcons: {
+export const customIcons: {
   [index: string]: {
     icon: React.ReactElement;
     label: string;
@@ -42,7 +42,7 @@ const customIcons: {
   },
 };
 
-function IconContainer(props: IconContainerProps) {
+export function IconContainer(props: IconContainerProps) {
   const { value, ...other } = props;
   return <span {...other}>{customIcons[value].icon}</span>;
 }
