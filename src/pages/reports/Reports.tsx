@@ -357,6 +357,11 @@ const Reports = () => {
 
     return [
       {
+        title: "דירוג המסעדה",
+        columns: colRating,
+        rows: rowRating,
+      },
+      {
         title: "חמש המנות שהוזמנו הכי הרבה במסעדה",
         columns: colMostOrdered,
         rows: rowMostOrdered,
@@ -370,11 +375,6 @@ const Reports = () => {
         title: "ההכנסות החודשיות במסעדה",
         columns: colMoney,
         rows: rowMoney,
-      },
-      {
-        title: "דירוג המסעדה",
-        columns: colRating,
-        rows: rowRating,
       },
     ];
   }, [orders]);
