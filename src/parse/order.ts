@@ -173,7 +173,7 @@ export const getOrders = async (
     if (userType === "client") {
       const clientOrderResults = orderResults.filter(
         (orderResult) =>
-          orderResult.attributes?.userId?.attributes?.role === "client"
+          orderResult.attributes?.userId?.id === userId
       );
       orderWithMenus = await Promise.all(
         clientOrderResults.map(async (order) => await getOrderWithMenus(order))

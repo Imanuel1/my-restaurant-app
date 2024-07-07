@@ -148,7 +148,12 @@ export const getHistoryOrders = async (
     orderHistoryQuery.include("menuIds");
     orderHistoryQuery.include("userId");
 
-    const orderResults = await orderHistoryQuery.find();
+    let orderResults = await orderHistoryQuery.find();
+    if (userType === "client") {
+      orderResults = orderResults.filter(
+        (orderResult) => orderResult.attributes?.userId === userId
+      );
+    }
     console.log(" results :", orderResults);
 
     const orderWithMenu = orderResults.map((order) => orderWithMenus(order));
