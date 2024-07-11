@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.85142b27.css",
-    "main.js": "/static/js/main.717dd8cb.js",
-    "static/js/453.1fec96de.chunk.js": "/static/js/453.1fec96de.chunk.js",
-    "static/media/la_academic7.svg": "/static/media/la_academic7.540cc8b03d147eb8877b31fab684a49d.svg",
-    "static/media/payment-cash.png": "/static/media/payment-cash.355cdc11dfbca55932d3.png",
-    "static/media/firstFood.jpg": "/static/media/firstFood.c8849c4c393b509899bb.jpg",
-    "static/media/dessert.jpg": "/static/media/dessert.797133fa0673f0d5f90b.jpg",
-    "static/media/mainFood.jpg": "/static/media/mainFood.910f1090b98b1ec54df6.jpg",
-    "static/media/drinks.jpg": "/static/media/drinks.3e8d4df1d0af649e39d1.jpg",
-    "static/media/placeholder-image.jpg": "/static/media/placeholder-image.3c0a422b9d39f22e1be7.jpg",
-    "static/media/bit.png": "/static/media/bit.9cb0e3caee1e68f4f516.png",
-    "static/media/barcode.png": "/static/media/barcode.80eb99141fc4a4991251.png",
-    "static/media/banana.svg": "/static/media/banana.ee2e592d97e484822175b814b86b26bd.svg",
-    "index.html": "/index.html",
-    "main.85142b27.css.map": "/static/css/main.85142b27.css.map",
-    "main.717dd8cb.js.map": "/static/js/main.717dd8cb.js.map",
-    "453.1fec96de.chunk.js.map": "/static/js/453.1fec96de.chunk.js.map"
+    "main.css": "/my-restaurant-app/static/css/main.ba502a86.css",
+    "main.js": "/my-restaurant-app/static/js/main.9e102e5a.js",
+    "static/js/453.1fec96de.chunk.js": "/my-restaurant-app/static/js/453.1fec96de.chunk.js",
+    "static/media/la_academic7.svg": "/my-restaurant-app/static/media/la_academic7.540cc8b03d147eb8877b31fab684a49d.svg",
+    "static/media/payment-cash.png": "/my-restaurant-app/static/media/payment-cash.355cdc11dfbca55932d3.png",
+    "static/media/firstFood.jpg": "/my-restaurant-app/static/media/firstFood.c8849c4c393b509899bb.jpg",
+    "static/media/dessert.jpg": "/my-restaurant-app/static/media/dessert.797133fa0673f0d5f90b.jpg",
+    "static/media/mainFood.jpg": "/my-restaurant-app/static/media/mainFood.910f1090b98b1ec54df6.jpg",
+    "static/media/drinks.jpg": "/my-restaurant-app/static/media/drinks.3e8d4df1d0af649e39d1.jpg",
+    "static/media/placeholder-image.jpg": "/my-restaurant-app/static/media/placeholder-image.3c0a422b9d39f22e1be7.jpg",
+    "static/media/bit.png": "/my-restaurant-app/static/media/bit.9cb0e3caee1e68f4f516.png",
+    "static/media/barcode.png": "/my-restaurant-app/static/media/barcode.80eb99141fc4a4991251.png",
+    "static/media/banana.svg": "/my-restaurant-app/static/media/banana.ee2e592d97e484822175b814b86b26bd.svg",
+    "index.html": "/my-restaurant-app/index.html",
+    "main.ba502a86.css.map": "/my-restaurant-app/static/css/main.ba502a86.css.map",
+    "main.9e102e5a.js.map": "/my-restaurant-app/static/js/main.9e102e5a.js.map",
+    "453.1fec96de.chunk.js.map": "/my-restaurant-app/static/js/453.1fec96de.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.85142b27.css",
-    "static/js/main.717dd8cb.js"
+    "static/css/main.ba502a86.css",
+    "static/js/main.9e102e5a.js"
   ]
 }
