@@ -13,18 +13,18 @@ firebase.initializeApp({
     measurementId: "G-LJ4JSF3RYN",
 });
 
-const messaging = firebase.messaging();
+export const messaging = firebase.messaging();
 
 // Customize notification handler here
-// messaging.onBackgroundMessage(function (payload) {
-//     console.log('Received background message ', payload);
-//     // Customize notification here
-//     const notificationTitle = 'Background Message Title';
-//     const notificationOptions = {
-//         body: 'Background Message body.',
-//         icon: '/firebase-logo.png'
-//     };
+messaging.onBackgroundMessage(function (payload) {
+    console.log('Received background message ', payload);
+    // Customize notification here
+    const notificationTitle = 'Background Message Title';
+    const notificationOptions = {
+        body: 'Background Message body.',
+        icon: '/firebase-logo.png'
+    };
 
-//     self.registration.showNotification(notificationTitle,
-//         notificationOptions);
-// });
+    self.registration.showNotification(notificationTitle,
+        notificationOptions);
+});
