@@ -13,7 +13,7 @@ firebase.initializeApp({
     measurementId: "G-LJ4JSF3RYN",
 });
 
-export const messaging = firebase.messaging();
+const messaging = firebase.messaging();
 
 // Customize notification handler here
 messaging.onBackgroundMessage(function (payload) {
