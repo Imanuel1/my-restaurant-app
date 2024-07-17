@@ -48,7 +48,6 @@ export default function HistoryOrder() {
   const [orderData, setOrderData] = useState<getHistoryOrdersType[] | null>(
     null
   );
-  const tableNumber = useRef(localStorage?.getItem("tableNumber"));
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenItems, setIsOpenItems] = useState<boolean[]>([]);
 

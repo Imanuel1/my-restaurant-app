@@ -15,6 +15,7 @@ import { UserContext } from "../../context/UserContext";
 import { getOrders, getOrdersType } from "../../parse/order";
 import { isMyBirthday } from "../../utils/utils";
 import RadioGroupRating from "../../components/rating/Rating";
+import { unsubscribeFromTopic } from "../../services/pubsub";
 
 const Payment: React.FC = () => {
   const [value, setValue] = useState<string>("Bit");
@@ -34,6 +35,10 @@ const Payment: React.FC = () => {
         rating
       );
       console.log("is history created ?? :", isHistoryCreated);
+      if (isHistoryCreated) {
+        unsubscribeFromTopic("orders");
+        localStorage.removeItem("tableNumber");
+      }
       getCurrentOrder();
     }
   };

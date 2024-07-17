@@ -25,6 +25,9 @@ import {
 } from "../../parse/order";
 import ManageOrder from "../../components/ManageOrder/ManageOrder";
 import StepperStatus from "../../components/stepper/StepperStatus";
+import { messageFilter } from "../../services/pubsub";
+import { onMessage } from "firebase/messaging";
+import { messaging } from "../../services/fb.config";
 
 interface PreOrder {
   menuItems: {
@@ -65,20 +68,43 @@ export default function Order() {
     setIsLoading(true);
     //request for order of the current user
     getOrdersRequset();
-    const intervalId = setInterval(() => {
-      if (
-        (localStorage.getItem("tableNumber") &&
-          (activeUser?.attributes?.role === "client" ||
-            !activeUser?.attributes?.role)) ||
-        activeUser?.attributes?.role === "manger" ||
-        activeUser?.attributes?.role === "worker"
-      ) {
-        setIsLoading(true);
-        getOrdersRequset();
-      }
-    }, 60000);
-    return () => clearInterval(intervalId);
+    // const intervalId: NodeJS.Timer = setInterval(() => {
+    //   if (
+    //     (localStorage.getItem("tableNumber") &&
+    //       (activeUser?.attributes?.role === "client" ||
+    //         !activeUser?.attributes?.role)) ||
+    //     activeUser?.attributes?.role === "manger" ||
+    //     activeUser?.attributes?.role === "worker"
+    //   ) {
+    //     setIsLoading(true);
+    //     getOrdersRequset();
+    //   }
+    // }, 60000);
+    // return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    if (orderData) {
+      onMessage(messaging(), (payload) => {
+        console.log("Message received. ", payload);
+        // Process the message here
+        const messageUserId = payload.data?.userId;
+        const messageTableNumber = payload.data?.tableNumber;
+        const orderId = payload.data?.orderId;
+        if (
+          messageFilter(
+            activeUser?.attributes?.role,
+            activeUser?.id,
+            messageUserId,
+            messageTableNumber
+          ) &&
+          orderId
+        ) {
+          getOrdersRequset();
+        }
+      });
+    }
+  }, [orderData]);
 
   //clear local storage +
   //get order init statuses - timer every 10 minutes
