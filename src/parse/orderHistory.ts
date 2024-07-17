@@ -138,12 +138,19 @@ export interface getHistoryOrdersType {
 
 export const getHistoryOrders = async (
   userId: string,
-  userType: "client" | "worker" | "manager"
+  userType: "client" | "worker" | "manager",
+  updatedAt?: Date
 ): Promise<getHistoryOrdersType[] | null> => {
   try {
     const orderHistoryQuery: Parse.Query = new Parse.Query("OrderHistory");
-    if (userType === "client") {
-      // orderHistoryQuery.equalTo("userId", userId);
+    if (updatedAt) {
+      const startDate = new Date(String(updatedAt));
+      startDate.setHours(0, 0, 0, 0); // Set time to 00:00:00.000
+      const endDate = new Date(startDate.getTime());
+      endDate.setDate(endDate.getDate() + 1); // Move to next day (00:00:00.000 of the following day)
+
+      orderHistoryQuery.greaterThanOrEqualTo("updatedAt", startDate);
+      orderHistoryQuery.lessThan("updatedAt", endDate);
     }
     orderHistoryQuery.include("menuIds");
     orderHistoryQuery.include("userId");

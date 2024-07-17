@@ -11,10 +11,17 @@ import {
 } from "../../parse/orderHistory";
 import DataGridTable from "../../components/Table/Table";
 import { IconContainer, customIcons } from "../../components/rating/Rating";
+import { CircularProgress } from "@mui/material";
+import dayjs, { Dayjs } from "dayjs";
 
 const Reports = () => {
   const [orders, setOrders] = useState<getHistoryOrdersType[]>([]);
+  const [ordersPerDay, setOrdersPerDay] = useState<getHistoryOrdersType[]>([]);
+  const [time, setTime] = useState<Dayjs | null>(
+    dayjs(new Date().toLocaleString())
+  );
   const { activeUser } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const tablesStructure = useMemo(() => {
     const menuDictionary = new Map<string, string>();
     const menuIds: string[] = []; //all the ids that in history
@@ -71,11 +78,6 @@ const Reports = () => {
       rate_2: 0,
       rate_1: 0,
       rate_0: 0,
-    };
-
-    const renderCellContent = (params: GridCellParams<any>) => {
-      const value = params.value;
-      return IconContainer({ value } as IconContainerProps);
     };
 
     orders.forEach((order, index) => {
@@ -381,7 +383,7 @@ const Reports = () => {
 
   useEffect(() => {
     const userType = activeUser?.attributes?.role || "";
-
+    setIsLoading(true);
     getHistoryOrders(activeUser?.id || "", userType)
       .then((res: getHistoryOrdersType[] | null) => {
         if (res) {
@@ -390,17 +392,50 @@ const Reports = () => {
           setOrders([]);
         }
       })
-      .catch((err) => console.error("error get all orders", err));
+      .catch((err) => console.error("error get all orders", err))
+      .finally(() => setIsLoading(false));
+
+    getHistoryOrders(activeUser?.id || "", userType, time as any)
+      .then((res: getHistoryOrdersType[] | null) => {
+        if (res) {
+          setOrdersPerDay(res);
+        } else {
+          setOrdersPerDay([]);
+        }
+      })
+      .catch((err) => console.error("error get all orders", err))
+      .finally(() => setIsLoading(false));
   }, []);
 
+  const tableData = () => {
+    const colRating: GridColDef[] = [
+      { field: "id", headerName: "#", type: "string", headerAlign: "center" },
+    ];
+    const rowRating: GridRowsProp = [];
+
+    return {
+      title: "הכנסה לפי תאריך",
+      columns: colRating,
+      rows: rowRating,
+    };
+  };
+
   return (
-    <div className="c-reports-container">
-      {tablesStructure?.length
-        ? tablesStructure.map((tableStructure, index) => (
-            <DataGridTable key={index} tableData={tableStructure} />
-          ))
-        : null}
-    </div>
+    <>
+      <div className="c-reports-container">
+        {tablesStructure?.length
+          ? tablesStructure.map((tableStructure, index) => (
+              <DataGridTable key={index} tableData={tableStructure} />
+            ))
+          : null}
+        <DataGridTable tableData={tableData()} />
+      </div>
+      {isLoading ? (
+        <CircularProgress
+          style={{ position: "absolute", top: "42%", left: "42%", zIndex: 5 }}
+        />
+      ) : null}
+    </>
   );
 };
 
