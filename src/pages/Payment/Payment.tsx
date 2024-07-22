@@ -15,15 +15,18 @@ import { UserContext } from "../../context/UserContext";
 import { getOrders, getOrdersType } from "../../parse/order";
 import { isMyBirthday } from "../../utils/utils";
 import RadioGroupRating from "../../components/rating/Rating";
-import { unsubscribeFromTopic } from "../../services/pubsub";
+import { SocketHookType } from "../../components/types/socket.type";
 
-const Payment: React.FC = () => {
+type props = {
+  socket: SocketHookType | null;
+}
+
+const Payment: React.FC<props> = ({ socket }) => {
   const [value, setValue] = useState<string>("Bit");
   const [orderData, setOrderData] = useState<getOrdersType[] | null>(null);
   const { activeUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rating, setRating] = useState<number>();
-
   const handlePaymentClick = async () => {
     console.log(" rating iii ", rating);
 
@@ -36,7 +39,8 @@ const Payment: React.FC = () => {
       );
       console.log("is history created ?? :", isHistoryCreated);
       if (isHistoryCreated) {
-        unsubscribeFromTopic("orders");
+        //unsubsribe from websocket
+        socket && socket.disconnect();
         localStorage.removeItem("tableNumber");
       }
       getCurrentOrder();

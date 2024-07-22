@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Routes, Route, Navigate, HashRouter } from "react-router-dom";
 import "./App.css";
 import { UserContext, UserProvider } from "./context/UserContext";
@@ -8,12 +8,22 @@ import { userRoutes } from "./routes/routes.service";
 import { LoadingPage } from "./pages/LoadingPage/LoadingPage";
 import Parse from "parse";
 import { createUserWithRole } from "./parse/signup";
-import { OrderProvider } from "./context/OrderContext";
+import { OrderContext } from "./context/OrderContext";
+import useSocket from "./hooks/useSocket";
+import { messageFilter } from "./utils/utils";
+import CustomAlert from "./components/Alert/Alert";
+import { SocketMessage } from "./components/types/socket.type";
 
 const App = () => {
   // const [currentUser, setCurrentUser] = useState(Parse.User.current() || null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { activeUser } = useContext(UserContext);
+  const { currentOrder } = useContext(OrderContext);
+  const [alert, setAlert] = useState<{ isDisplay: boolean; id?: string }>({
+    isDisplay: false,
+  });
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  const socket = useSocket();
 
   useEffect(() => {
     const loadingTimer = setTimeout(() => setIsLoading(false), 3000);
@@ -25,6 +35,52 @@ const App = () => {
     ? userRoutes[activeUser.attributes.role as keyof typeof userRoutes]
     : userRoutes["guest"];
 
+  useEffect(() => {
+    socket.connect();
+    socket.on(SocketMessage.ORDER_UPDATED, (payload) => {
+      console.log("Message received. ", payload);
+      // Process the message here
+      const messageUserId = payload.data?.userId;
+      const messageTableNumber = payload.data?.tableNumber;
+      const orderId = payload.data?.orderId;
+      const status = payload.data?.status;
+      if (
+        messageFilter(
+          activeUser?.attributes?.role,
+          activeUser?.id,
+          messageUserId,
+          messageTableNumber,
+          status
+        ) &&
+        orderId
+      ) {
+        setAlert({ isDisplay: true, id: orderId });
+        timeoutRef.current = setTimeout(() => {
+          setAlert({ isDisplay: false });
+        }, 2000);
+        // fetchUpdatedOrderData(orderId);
+      }
+    });
+
+    return () => {
+      clearTimeout(timeoutRef.current);
+      socket.disconnect();
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(
+  //     `Socket connection status: ${
+  //       socket.isConnected ? "Connected" : "Disconnected"
+  //     }`
+  //   );
+  // }, [socket.isConnected]);
+
+  //when get message -
+  //manager/ worker - get all messages
+  //client - do a sub when send to kitchen, and unsub after payment. when get message filter it by userId
+  //guest - do a sub when send to kitchen, and unsub after payment. when get message filter it by table number
+
   if (isLoading) {
     // createUserWithRole("rabb", "admin2@gmail.com", "Aa123456!", {
     //   role: "manager",
@@ -34,20 +90,29 @@ const App = () => {
 
   return (
     <div className="app-container">
-      <OrderProvider>
-        <HashRouter>
-          <NavigationBar />
-          <Routes>
+      <HashRouter>
+        <NavigationBar />
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate to={routes.defaultRoute} replace />}
+          />
+          {routes.pages.map((Page, index) => (
             <Route
-              path="/"
-              element={<Navigate to={routes.defaultRoute} replace />}
+              key={index}
+              path={Page.path}
+              element={<Page.element socket={socket} />}
             />
-            {routes.pages.map((page, index) => (
-              <Route key={index} path={page.path} element={page.element} />
-            ))}
-          </Routes>
-        </HashRouter>
-      </OrderProvider>
+          ))}
+        </Routes>
+      </HashRouter>
+      {alert.isDisplay ? (
+        <CustomAlert
+          severity="success"
+          title="עדכון הזמנה"
+          text={`הזמנה מס' ${alert.id} עודכנה!`}
+        />
+      ) : null}
     </div>
   );
 };

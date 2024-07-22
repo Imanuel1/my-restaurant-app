@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import Parse from "parse";
 import { UserProvider } from "./context/UserContext";
+import { OrderProvider } from "./context/OrderContext";
 
 // the URL can be change whenever URL of web i want to install the Parse (back4app is auto complete example)
 Parse.serverURL = "https://parseapi.back4app.com"; // This is your Server URL
@@ -19,7 +20,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <UserProvider>
-      <App />
+      <OrderProvider>
+        <App />
+      </OrderProvider>
     </UserProvider>
   </React.StrictMode>
 );

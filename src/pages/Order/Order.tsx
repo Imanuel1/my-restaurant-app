@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -25,9 +25,12 @@ import {
 } from "../../parse/order";
 import ManageOrder from "../../components/ManageOrder/ManageOrder";
 import StepperStatus from "../../components/stepper/StepperStatus";
-import { messageFilter } from "../../services/pubsub";
 import { onMessage } from "firebase/messaging";
-import { messaging } from "../../services/fb.config";
+import {
+  SocketHookType,
+  SocketMessage,
+} from "../../components/types/socket.type";
+import { messageFilter } from "../../utils/utils";
 
 interface PreOrder {
   menuItems: {
@@ -43,7 +46,11 @@ interface PreOrder {
   userId?: string;
 }
 
-export default function Order() {
+type props = {
+  socket: SocketHookType | null;
+};
+
+const Order: FC<props> = ({ socket }) => {
   const { activeUser } = useContext(UserContext);
   const { clearOrder, currentOrder, setOrder } = useContext(OrderContext);
   // const [preOrderData, setPreOrderData] = useState<PreOrder[] | null>(
@@ -58,7 +65,7 @@ export default function Order() {
     getOrders(activeUser?.id || "", userType)
       .then((res) => {
         setOrderData(res);
-        console.log("res res order:", res);
+        console.log("getOrders res:", res);
       })
       .catch((err) => console.error("error while getOrders :", err))
       .finally(() => setIsLoading(false));
@@ -85,18 +92,20 @@ export default function Order() {
 
   useEffect(() => {
     if (orderData) {
-      onMessage(messaging(), (payload) => {
+      socket?.on(SocketMessage.ORDER_UPDATED, (payload) => {
         console.log("Message received. ", payload);
         // Process the message here
         const messageUserId = payload.data?.userId;
         const messageTableNumber = payload.data?.tableNumber;
         const orderId = payload.data?.orderId;
+        const status = payload.data?.status;
         if (
           messageFilter(
             activeUser?.attributes?.role,
             activeUser?.id,
             messageUserId,
-            messageTableNumber
+            messageTableNumber,
+            status
           ) &&
           orderId
         ) {
@@ -105,6 +114,16 @@ export default function Order() {
       });
     }
   }, [orderData]);
+
+  const emitOrderUpdate = (orderId: string) => {
+    //publish order created!
+    socket?.emit(SocketMessage.ORDER_UPDATED, {
+      orderId,
+      userId: activeUser?.id,
+      tableNumber: localStorage.getItem("tableNumber"),
+      status: SocketMessage.ORDER_UPDATED,
+    });
+  };
 
   //clear local storage +
   //get order init statuses - timer every 10 minutes
@@ -119,12 +138,16 @@ export default function Order() {
     console.log("data sent to create order - ", orderData);
     //TODO: table number
     if (currentOrder) {
+      console.log("inside if (currentOrder) =", currentOrder);
+
       createOrder(currentOrder?.menuItems, activeUser?.id, tableNumber)
         .then((res) => {
           console.log("res createOrder :", res);
           getOrdersRequset();
+          // publish order created!
+          emitOrderUpdate(currentOrder?.userId || "n0-id");
         })
-        .catch((err) => console.log("error whike create order", err))
+        .catch((err) => console.log("error while create order", err))
         .finally(() => setIsLoading(false));
     }
   };
@@ -327,9 +350,16 @@ export default function Order() {
             {!localStorage.getItem("tableNumber") &&
             (activeUser?.attributes?.role === "client" ||
               !activeUser?.attributes?.role) ? (
-              <h3
-                style={{ width: "100%", textAlign: "center" }}
-              >{`מחיר כולל - ${sumCost || 0} ₪`}</h3>
+              <span
+                style={{
+                  width: "100%",
+                  display: "block",
+                  textAlign: "center",
+                  fontSize: "1.17em",
+                  margin: "1em 0px",
+                  fontWeight: "bold",
+                }}
+              >{`מחיר כולל - ${sumCost || 0} ₪`}</span>
             ) : null}
           </List>
           {
@@ -361,11 +391,14 @@ export default function Order() {
           }
         </>
       ) : (
-        <>{orderData ? <ManageOrder orderData={orderData} /> : null}</>
+        <>
+          {orderData ? (
+            <ManageOrder orderData={orderData} socket={socket} emitOrderUpdate={emitOrderUpdate} />
+          ) : null}
+        </>
       )}
     </div>
   );
-}
+};
 
-//statuses of order: send to kitchen -> in progress -> finished
-// <Stack direction="row" spacing={1}>
+export default Order;

@@ -18,6 +18,8 @@ import { MenuType } from "../parse/menu";
 import ManageMenus from "../pages/ManageMenus/ManageMenus";
 import Reports from "../pages/reports/Reports";
 import HistoryOrder from "../pages/HistoryOrder/HistoryOrder";
+import { Socket } from "socket.io-client";
+import { SocketHookType } from "../components/types/socket.type";
 
 // MyOrder.tsx
 {
@@ -63,7 +65,7 @@ export const userRoutes = {
       {
         path: "/about",
         label: "אפליקציית שדרות היסע",
-        element: <About />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <About />,
       },
       // {
       //   path: "/menu",
@@ -73,27 +75,33 @@ export const userRoutes = {
       {
         path: "/my-order",
         label: "אפליקציית שדרות היסע",
-        element: <Order />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Order socket={socket} />
+        ),
       },
       {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
-        element: <Payment />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Payment socket={socket} />
+        ),
       },
       {
         path: "/allMenus",
         label: "אפליקציית שדרות היסע",
-        element: <ManageMenus dishType={foodType} />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <ManageMenus dishType={foodType} />
+        ),
       },
       {
         path: "/reports",
         label: "אפליקציית שדרות היסע",
-        element: <Reports />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <Reports />,
       },
       {
         path: "/history",
         label: "אפליקציית שדרות היסע",
-        element: <HistoryOrder />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <HistoryOrder />,
       },
       // {
       //   path: "/logout",
@@ -111,7 +119,7 @@ export const userRoutes = {
       {
         path: "/about",
         label: "אפליקציית שדרות היסע",
-        element: <About />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <About />,
       },
       // {
       //   path: "/menu",
@@ -121,22 +129,28 @@ export const userRoutes = {
       {
         path: "/my-order",
         label: "אפליקציית שדרות היסע",
-        element: <Order />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Order socket={socket} />
+        ),
       },
       {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
-        element: <Payment />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Payment socket={socket} />
+        ),
       },
       {
         path: "/allMenus",
         label: "אפליקציית שדרות היסע",
-        element: <ManageMenus dishType={foodType} />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <ManageMenus dishType={foodType} />
+        ),
       },
       {
         path: "/history",
         label: "אפליקציית שדרות היסע",
-        element: <HistoryOrder />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <HistoryOrder />,
       },
       // {
       //   path: "/logout",
@@ -154,27 +168,33 @@ export const userRoutes = {
       {
         path: "/about",
         label: "אפליקציית שדרות היסע",
-        element: <About />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <About />,
       },
       {
         path: "/menu",
         label: "אפליקציית שדרות היסע",
-        element: <Main dishType={foodType} />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Main dishType={foodType} />
+        ),
       },
       {
         path: "/my-order",
         label: "אפליקציית שדרות היסע",
-        element: <Order />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Order socket={socket} />
+        ),
       },
       {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
-        element: <Payment />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Payment socket={socket} />
+        ),
       },
       {
         path: "/history",
         label: "אפליקציית שדרות היסע",
-        element: <HistoryOrder />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <HistoryOrder />,
       },
       // {
       //   path: "/logout",
@@ -192,32 +212,38 @@ export const userRoutes = {
       {
         path: "/about",
         label: "אפליקציית שדרות היסע",
-        element: <About />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <About />,
       },
       {
         path: "/menu",
         label: "אפליקציית שדרות היסע",
-        element: <Main dishType={foodType} />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Main dishType={foodType} />
+        ),
       },
       {
         path: "/my-order",
         label: "אפליקציית שדרות היסע",
-        element: <Order />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Order socket={socket} />
+        ),
       },
       {
         path: "/payment",
         label: "אפליקציית שדרות היסע",
-        element: <Payment />,
+        element: ({ socket }: { socket: SocketHookType | null }) => (
+          <Payment socket={socket} />
+        ),
       },
       {
         path: "/login",
         label: "אפליקציית שדרות היסע",
-        element: <LoginForm />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <LoginForm />,
       },
       {
         path: "/signup",
         label: "אפליקציית שדרות היסע",
-        element: <SignupForm />,
+        element: ({ socket }: { socket: SocketHookType | null }) => <SignupForm />,
       },
     ],
   },

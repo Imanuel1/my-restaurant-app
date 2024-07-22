@@ -152,7 +152,12 @@ export const getOrders = async (
   userType: "client" | "worker" | "manager"
 ): Promise<getOrdersType[] | null> => {
   try {
-    console.log("getOrders - userID/userType", userId, userType);
+    console.log(
+      "getOrders - userID/userType/tableNumber",
+      userId,
+      userType,
+      localStorage.getItem("tableNumber")
+    );
 
     const orderQuery: Parse.Query = new Parse.Query("Order");
     if (userType === "client") {
@@ -171,16 +176,15 @@ export const getOrders = async (
     console.log(" results :", orderResults);
     let orderWithMenus: any[];
     if (userType === "client") {
-      const clientOrderResults = orderResults.filter(
-        (orderResult) =>
-          orderResult.attributes?.userId?.id === userId
+      const clientOrderResults = orderResults?.filter(
+        (orderResult) => orderResult.attributes?.userId?.id === userId
       );
       orderWithMenus = await Promise.all(
-        clientOrderResults.map(async (order) => await getOrderWithMenus(order))
+        clientOrderResults?.map(async (order) => await getOrderWithMenus(order))
       );
     } else {
       orderWithMenus = await Promise.all(
-        orderResults.map(async (order) => await getOrderWithMenus(order))
+        orderResults?.map(async (order) => await getOrderWithMenus(order))
       );
     }
 
@@ -224,10 +228,14 @@ export const updateOrder = async ({
           ...item,
           status: StatuMenuType.PENDING,
         }));
-        order.set(
-          "statusOrder",
-          order.attributes.statusOrder.push(statusOrder)
+        console.log(
+          "the updated statusOrder/  order.attributes.statusOrder",
+          statusOrder,
+          order.attributes.statusOrder
         );
+        order.attributes.statusOrder.push(statusOrder[0]);
+
+        order.set("statusOrder", order.attributes.statusOrder);
         const menuIds = menuItems.map((item) => item.menuId);
         menuIds.push(order.attributes.menuIds);
         const relation = order.relation("menuIds");
@@ -240,6 +248,9 @@ export const updateOrder = async ({
           })
         );
       }
+
+      console.log("order before updated :", order);
+
       await order.save();
     } else {
       alert("Error! order not exist!");

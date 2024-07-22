@@ -94,10 +94,12 @@ import logo from "../../assets/icons/app-logo.jpeg";
 import logo1 from "../../assets/icons/la_academic1.jpeg";
 import logo7 from "../../assets/icons/la_academic7.svg";
 import { MenuType } from "../../parse/menu";
+import { OrderContext } from "../../context/OrderContext";
 
 // import "./NavbarMobile.css";
 const NavbarHook = ({}) => {
   const { activeUser, logout } = useContext(UserContext);
+  const { clearOrder } = useContext(OrderContext);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: "1150px" });
@@ -215,6 +217,9 @@ const NavbarHook = ({}) => {
               className={`${linkClassName} ${buttonClassName}`}
               onClick={() => {
                 logout();
+                //remove the local order
+                clearOrder();
+                localStorage.removeItem("tableNumber");
                 navigate("/menu"); // Replace "/" with your actual home page route
                 closeMobileMenu();
               }}

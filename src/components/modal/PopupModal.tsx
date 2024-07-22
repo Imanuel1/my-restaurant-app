@@ -42,6 +42,8 @@ const PopupModal: FC<props> = ({
     try {
       const userType = activeUser?.attributes?.role || "";
       const userActiveOrder = await getOrders(activeUser?.id || "", userType);
+      console.log("handleAddOrder , userActiveOrder", userActiveOrder);
+      
       if (userActiveOrder && userActiveOrder?.length) {
         await updateOrder({
           id: userActiveOrder[0].order.id,

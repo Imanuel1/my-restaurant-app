@@ -1,19 +1,15 @@
-import React, { useContext, useEffect, useState, Fragment } from "react";
+import React, { useContext, useEffect, useState, Fragment, FC } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { Avatar, ListItemAvatar } from "@mui/material";
-import ButtonX from "../buttonCustom/ButtonX";
 import "./ManageOrder.css";
 import {
   createOrder,
@@ -23,19 +19,18 @@ import {
   updateOrderStatus,
 } from "../../parse/order";
 import Collapse from "@mui/material/Collapse";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import SendIcon from "@mui/icons-material/Send";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
 import StepperStatus from "../stepper/StepperStatus";
+import { SocketHookType } from "../types/socket.type";
 
-export default function ManageOrder({
-  orderData,
-}: {
+type props = {
   orderData: getOrdersType[];
-}) {
+  socket: SocketHookType | null;
+  emitOrderUpdate: (orderId: string) => void;
+};
+
+const ManageOrder: FC<props> = ({ orderData, socket, emitOrderUpdate }) => {
   const [isOpenItems, setIsOpenItems] = useState(
     new Array(orderData.length || 0).fill(false)
   );
@@ -65,9 +60,10 @@ export default function ManageOrder({
       status,
     });
 
-    // if (res) {
-    //   refetchOrder()
-    // }
+    if (res) {
+      //publish order created!
+      emitOrderUpdate(id);
+    }
   };
 
   return (
@@ -108,7 +104,17 @@ export default function ManageOrder({
                             alignItems: "center",
                           }}
                         >
-                          <h3>- סטאטוס מנות -</h3>
+                          <span
+                            style={{
+                              width: "100%",
+                              textAlign: "center",
+                              fontSize: "1.17em",
+                              margin: "1em 0px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            - סטאטוס מנות -
+                          </span>
                           <div
                             style={{
                               display: "flex",
@@ -287,7 +293,9 @@ export default function ManageOrder({
       </List>
     </div>
   );
-}
+};
+
+export default ManageOrder;
 
 //statuses of order: send to kitchen -> in progress -> finished
 // <Stack direction="row" spacing={1}>
