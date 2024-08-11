@@ -65,7 +65,7 @@ export const createOrder = async (
     return true;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return false;
   }
 };
@@ -193,7 +193,7 @@ export const getOrders = async (
     return orderWithMenus;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return null;
   }
 };
@@ -253,13 +253,13 @@ export const updateOrder = async ({
 
       await order.save();
     } else {
-      alert("Error! order not exist!");
+      console.error("Error! order not exist!");
     }
 
     return order;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return null;
   }
 };
@@ -287,13 +287,13 @@ export const updateOrderStatus = async ({
       order.set("statusOrder", newStatusOrder);
       await order.save();
     } else {
-      alert("Error! order not exist!");
+      console.error("Error! order not exist!");
     }
 
     return order;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return null;
   }
 };

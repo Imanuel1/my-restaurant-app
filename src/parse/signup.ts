@@ -74,7 +74,7 @@ export const parseSignUp = async (
     user.set("birthday", convertDateFormat(birthday));
 
     const createdUser = await user.signUp();
-    alert(
+    console.error(
       `Success! User ${createdUser.getUsername()} was successfully created!`
     );
     const acl = new Parse.ACL();
@@ -132,13 +132,13 @@ export const parseLogout = async (): Promise<boolean> => {
     // To verify that current user is now empty, currentAsync can be used
     const currentUser: Parse.User | undefined = Parse.User.current();
     if (currentUser === null) {
-      alert("Success! No user is logged in anymore!");
+      console.error("Success! No user is logged in anymore!");
     }
     // Update state variable holding current user - context!!!
 
     return true;
   } catch (error: any) {
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return false;
   }
 };

@@ -30,7 +30,7 @@ export const createNewMenu = async (
     return true;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return false;
   }
 };
@@ -46,7 +46,7 @@ export const getMenusByType = async (type: MenuType) => {
     return menuList;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return null;
   }
 };
@@ -63,7 +63,7 @@ export const getAllMenus = async () => {
     return menuList;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return null;
   }
 };
@@ -99,7 +99,7 @@ export const updateMenu = async ({
     return menu;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return null;
   }
 };
@@ -128,7 +128,7 @@ export const deleteMenu = async ({
     return true;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return false;
   }
 };

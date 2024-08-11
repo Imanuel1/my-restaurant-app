@@ -170,7 +170,7 @@ export const getHistoryOrders = async (
     return orderWithMenu;
   } catch (error: any) {
     // Error can be caused by lack of Internet connection
-    alert(`Error! ${error.message}`);
+    console.error(`Error! ${error.message}`);
     return null;
   }
 };
