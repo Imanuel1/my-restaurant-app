@@ -38,12 +38,12 @@ const App = () => {
   useEffect(() => {
     socket.connect();
     socket.on(SocketMessage.ORDER_UPDATED, (payload) => {
-      console.log("Message received. ", payload);
+      console.log("Message received in MAIN PAGE. ", payload);
       // Process the message here
-      const messageUserId = payload.data?.userId;
-      const messageTableNumber = payload.data?.tableNumber;
-      const orderId = payload.data?.orderId;
-      const status = payload.data?.status;
+      const messageUserId = payload?.userId;
+      const messageTableNumber = payload?.tableNumber;
+      const orderId = payload?.orderId;
+      const status = payload?.status;
       if (
         messageFilter(
           activeUser?.attributes?.role,
@@ -54,10 +54,12 @@ const App = () => {
         ) &&
         orderId
       ) {
+        // console.log("inside if - MAIN PAGE. ", payload);
+
         setAlert({ isDisplay: true, id: orderId });
         timeoutRef.current = setTimeout(() => {
           setAlert({ isDisplay: false });
-        }, 2000);
+        }, 7000);
         // fetchUpdatedOrderData(orderId);
       }
     });
@@ -106,13 +108,12 @@ const App = () => {
           ))}
         </Routes>
       </HashRouter>
-      {alert.isDisplay ? (
-        <CustomAlert
-          severity="success"
-          title="עדכון הזמנה"
-          text={`הזמנה מס' ${alert.id} עודכנה!`}
-        />
-      ) : null}
+      <CustomAlert
+        isVisible={alert.isDisplay}
+        severity="success"
+        title="עדכון הזמנה"
+        text={`הזמנה מס' ${alert.id} עודכנה!`}
+      />
     </div>
   );
 };

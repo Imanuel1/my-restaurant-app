@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState, useRef } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -27,6 +27,7 @@ import ManageOrder from "../../components/ManageOrder/ManageOrder";
 import StepperStatus from "../../components/stepper/StepperStatus";
 import { onMessage } from "firebase/messaging";
 import {
+  SocketEmitMessage,
   SocketHookType,
   SocketMessage,
 } from "../../components/types/socket.type";
@@ -59,13 +60,14 @@ const Order: FC<props> = ({ socket }) => {
   const [orderData, setOrderData] = useState<getOrdersType[] | null>(null);
   const [tableNumber, setTableNumber] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   const getOrdersRequset = () => {
     const userType = activeUser?.attributes?.role || "";
     getOrders(activeUser?.id || "", userType)
       .then((res) => {
-        setOrderData(res);
         console.log("getOrders res:", res);
+        setOrderData(res);
       })
       .catch((err) => console.error("error while getOrders :", err))
       .finally(() => setIsLoading(false));
@@ -91,36 +93,39 @@ const Order: FC<props> = ({ socket }) => {
   }, []);
 
   useEffect(() => {
-    if (orderData) {
-      socket?.on(SocketMessage.ORDER_UPDATED, (payload) => {
-        console.log("Message received. ", payload);
-        // Process the message here
-        const messageUserId = payload.data?.userId;
-        const messageTableNumber = payload.data?.tableNumber;
-        const orderId = payload.data?.orderId;
-        const status = payload.data?.status;
-        if (
-          messageFilter(
-            activeUser?.attributes?.role,
-            activeUser?.id,
-            messageUserId,
-            messageTableNumber,
-            status
-          ) &&
-          orderId
-        ) {
-          getOrdersRequset();
-        }
-      });
-    }
-  }, [orderData]);
+    socket?.on(SocketMessage.ORDER_UPDATED, (payload) => {
+      console.log("Message received in order page. ", payload);
+      // Process the message here
+      const messageUserId = payload?.userId;
+      const messageTableNumber = payload?.tableNumber;
+      const orderId = payload?.orderId;
+      const status = payload?.status;
+      if (
+        messageFilter(
+          activeUser?.attributes?.role,
+          activeUser?.id,
+          messageUserId,
+          messageTableNumber,
+          status
+        ) &&
+        orderId
+      ) {
+        console.log("went throght the if - before getOrdersRequset()");
+        getOrdersRequset();
+      }
+    });
+  }, []);
 
-  const emitOrderUpdate = (orderId: string) => {
+  const emitOrderUpdate = (
+    orderId: string,
+    userId: string | undefined,
+    tableNumber: number | undefined
+  ) => {
     //publish order created!
-    socket?.emit(SocketMessage.ORDER_UPDATED, {
+    socket?.emit(SocketEmitMessage.ORDER_UPDATE, {
       orderId,
-      userId: activeUser?.id,
-      tableNumber: localStorage.getItem("tableNumber"),
+      userId,
+      tableNumber,
       status: SocketMessage.ORDER_UPDATED,
     });
   };
@@ -145,7 +150,12 @@ const Order: FC<props> = ({ socket }) => {
           console.log("res createOrder :", res);
           getOrdersRequset();
           // publish order created!
-          emitOrderUpdate(currentOrder?.userId || "n0-id");
+
+          emitOrderUpdate(
+            currentOrder?.userId || "n0-id",
+            activeUser?.id,
+            Number(localStorage.getItem("tableNumber"))
+          );
         })
         .catch((err) => console.log("error while create order", err))
         .finally(() => setIsLoading(false));
@@ -393,7 +403,10 @@ const Order: FC<props> = ({ socket }) => {
       ) : (
         <>
           {orderData ? (
-            <ManageOrder orderData={orderData} socket={socket} emitOrderUpdate={emitOrderUpdate} />
+            <ManageOrder
+              orderData={orderData}
+              emitOrderUpdate={emitOrderUpdate}
+            />
           ) : null}
         </>
       )}
