@@ -20,7 +20,15 @@ interface props {
   orderId: string;
   menuId: string;
   status: string;
-  handleUpdateStatus?: (id: string, menuId: string, status: string) => void;
+  userId?: string | undefined;
+  tableNumber?: number | undefined;
+  handleUpdateStatus?: (
+    id: string,
+    menuId: string,
+    status: string,
+    userId: string | undefined,
+    tableNumber: number | undefined
+  ) => void;
 }
 
 const statusTranslate = {
@@ -116,6 +124,8 @@ const StepperStatus: FC<props> = ({
   orderId,
   menuId,
   status,
+  userId,
+  tableNumber,
   handleUpdateStatus,
 }) => {
   const [activeStep, setActiveStep] = useState<number>(
@@ -124,12 +134,20 @@ const StepperStatus: FC<props> = ({
   const { activeUser } = useContext(UserContext);
 
   useEffect(() => {
-    handleUpdateStatus?.(
-      orderId,
-      menuId,
-      indexToStatus[activeStep as keyof typeof indexToStatus] as string
-    );
-  }, [activeStep]);
+    if (status) {
+      setActiveStep(statusToIndex?.[status as StatuMenuType] as number);
+    }
+  }, [status]);
+
+  // useEffect(() => {
+  //   handleUpdateStatus?.(
+  //     orderId,
+  //     menuId,
+  //     indexToStatus[activeStep as keyof typeof indexToStatus] as string,
+  //     userId,
+  //     tableNumber
+  //   );
+  // }, [activeStep]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -148,14 +166,21 @@ const StepperStatus: FC<props> = ({
                 ? "admin"
                 : "client"
             }
-            onClick={() =>
+            onClick={() => {
               setActiveStep((prev) =>
                 activeUser?.attributes?.role === "manager" ||
                 activeUser?.attributes?.role === "worker"
                   ? index
                   : prev
-              )
-            }
+              );
+              handleUpdateStatus?.(
+                orderId,
+                menuId,
+                indexToStatus[index as keyof typeof indexToStatus] as string,
+                userId,
+                tableNumber
+              );
+            }}
           >
             <StepLabel StepIconComponent={ColorlibStepIcon}>
               {statusTranslate[label as keyof typeof statusTranslate]}
