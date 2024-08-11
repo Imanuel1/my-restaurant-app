@@ -26,11 +26,14 @@ import { SocketHookType } from "../types/socket.type";
 
 type props = {
   orderData: getOrdersType[];
-  socket: SocketHookType | null;
-  emitOrderUpdate: (orderId: string) => void;
+  emitOrderUpdate: (
+    orderId: string,
+    userId: string | undefined,
+    tableNumber: number | undefined
+  ) => void;
 };
 
-const ManageOrder: FC<props> = ({ orderData, socket, emitOrderUpdate }) => {
+const ManageOrder: FC<props> = ({ orderData, emitOrderUpdate }) => {
   const [isOpenItems, setIsOpenItems] = useState(
     new Array(orderData.length || 0).fill(false)
   );
@@ -52,8 +55,12 @@ const ManageOrder: FC<props> = ({ orderData, socket, emitOrderUpdate }) => {
   const handleUpdateStatus = async (
     id: string,
     menuId: string,
-    status: string
+    status: string,
+    userId?: string | undefined,
+    tableNumber?: number | undefined
   ) => {
+    console.log("MAIN PAGE - update oder data!!!");
+
     const res = await updateOrderStatus({
       id,
       menuId,
@@ -62,7 +69,7 @@ const ManageOrder: FC<props> = ({ orderData, socket, emitOrderUpdate }) => {
 
     if (res) {
       //publish order created!
-      emitOrderUpdate(id);
+      emitOrderUpdate(id, userId, tableNumber);
     }
   };
 
@@ -262,6 +269,8 @@ const ManageOrder: FC<props> = ({ orderData, socket, emitOrderUpdate }) => {
                                     <div className="stepper-holder">
                                       <StepperStatus
                                         orderId={value.order.id}
+                                        userId={value.order.userId}
+                                        tableNumber={value.order.tableNumber}
                                         menuId={orderItem.menuId}
                                         status={orderItem.status}
                                         handleUpdateStatus={handleUpdateStatus}
