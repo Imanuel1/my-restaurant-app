@@ -59,7 +59,7 @@ const ManageOrder: FC<props> = ({ orderData, emitOrderUpdate }) => {
     userId?: string | undefined,
     tableNumber?: number | undefined
   ) => {
-    console.log("MAIN PAGE - update oder data!!!");
+    console.log("MAIN PAGE - update oder data!!!", { id, userId, tableNumber });
 
     const res = await updateOrderStatus({
       id,

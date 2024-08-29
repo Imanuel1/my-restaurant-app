@@ -16,7 +16,7 @@ const DatePickerValue: FC<props> = ({ time, setTime }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        label="Controlled picker"
+        label="select date"
         value={time}
         onChange={(newValue: Dayjs | null) => setTime(newValue)}
       />

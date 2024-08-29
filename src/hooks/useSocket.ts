@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
 
-const SERVER_URL = "http://localhost:4000"; // Replace with your server URL
+const SERVER_URL = "http://localhost:4000"; // "https://relic-flint-grouse.glitch.me/"; // Replace with your server URL
 
 const useSocket = () => {
   const [socket, setSocket] = useState<Socket | null>(null);

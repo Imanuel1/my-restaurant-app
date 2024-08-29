@@ -13,12 +13,13 @@ import DataGridTable from "../../components/Table/Table";
 import { IconContainer, customIcons } from "../../components/rating/Rating";
 import { CircularProgress } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
+import DatePickerValue from "../../components/datePicker/DatePicker";
 
 const Reports = () => {
   const [orders, setOrders] = useState<getHistoryOrdersType[]>([]);
   const [ordersPerDay, setOrdersPerDay] = useState<getHistoryOrdersType[]>([]);
   const [time, setTime] = useState<Dayjs | null>(
-    dayjs(new Date().toLocaleString())
+    dayjs(new Date().toLocaleTimeString())
   );
   const { activeUser } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -115,6 +116,56 @@ const Reports = () => {
         rateCount.avgRate = rateCount.avgRate / rateCount.count;
       }
     });
+    const orderPerDate: {
+      orderCount: number;
+      moneyCount: number;
+    } = {
+      orderCount: ordersPerDay?.length || 0,
+      moneyCount: 0,
+    };
+    const rateCountPerDay: {
+      avgRate: number;
+      count: number;
+      rate_5: number;
+      rate_4: number;
+      rate_3: number;
+      rate_2: number;
+      rate_1: number;
+      rate_0: number;
+    } = {
+      avgRate: 0,
+      count: 0,
+      rate_5: 0,
+      rate_4: 0,
+      rate_3: 0,
+      rate_2: 0,
+      rate_1: 0,
+      rate_0: 0,
+    };
+    ordersPerDay?.forEach((order, index) => {
+      orderPerDate.moneyCount += order.order.cost;
+      //rate per day
+      switch (order.order?.rating) {
+        case undefined:
+          rateCountPerDay.rate_0 += 1;
+          break;
+        case 5:
+        case 4:
+        case 3:
+        case 2:
+        case 1:
+          rateCountPerDay[`rate_${order.order.rating}`] += 1;
+          rateCountPerDay.count += 1;
+          rateCountPerDay.avgRate += order.order.rating;
+          break;
+      }
+
+      if (orders.length - 1 === index) {
+        rateCountPerDay.avgRate =
+          rateCountPerDay.avgRate / rateCountPerDay.count;
+      }
+    });
+
     // Count occurrences of each menu ID
     const menuIdCounts = menuIds.reduce(
       (acc: { [key in string]: number }, curr: string) => {
@@ -268,6 +319,7 @@ const Reports = () => {
         },
         type: "string",
         headerAlign: "center",
+        width: 110,
       },
       {
         field: "count",
@@ -357,29 +409,90 @@ const Reports = () => {
     ];
     // const colMostOrdered: GridColDef[] = [{field: "#", type: "string"}, {field: "menu", headerName: "שם מנה", type: "string"}];
 
+    const colMoneyPerDay: GridColDef[] = [
+      { field: "id", headerName: "#", type: "string", headerAlign: "center" },
+      {
+        field: "selectedDate",
+        headerName: "תאריך",
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "earnMoney",
+        headerName: "כמות הכנסות",
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "orderSum",
+        headerName: "כמות הזמנות",
+        type: "string",
+        headerAlign: "center",
+      },
+      {
+        field: "avgRate",
+        renderHeader: () => {
+          return (
+            <>
+              <span>{`ציון ממוצע -`}</span>
+              {Math.round(rateCountPerDay.avgRate) ? (
+                <span>
+                  {customIcons[Math.round(rateCountPerDay.avgRate)].icon}
+                </span>
+              ) : null}
+            </>
+          );
+        },
+        type: "string",
+        headerAlign: "center",
+        width: 110,
+      },
+    ];
+    const rowMoneyPerDay: GridRowsProp = [
+      {
+        [colMoneyPerDay[0].field]: 1,
+        [colMoneyPerDay[1].field]:
+          typeof time == "string" ? new Date(time).toLocaleTimeString() : "-",
+        [colMoneyPerDay[2].field]: orderPerDate.moneyCount,
+        [colMoneyPerDay[3].field]: orderPerDate.orderCount,
+        [colMoneyPerDay[4].field]:
+          Math.round(rateCountPerDay.avgRate * 10) / 10,
+      },
+    ];
+
     return [
       {
+        id: "resturamt-rating",
         title: "דירוג המסעדה",
         columns: colRating,
         rows: rowRating,
       },
       {
+        id: "resturamt-manue-ordered",
         title: "חמש המנות שהוזמנו הכי הרבה במסעדה",
         columns: colMostOrdered,
         rows: rowMostOrdered,
       },
       {
+        id: "resturamt-payment-used",
         title: "מה תצורת התשלום הנפוצה ביותר במסעדה",
         columns: colPayment,
         rows: rowPayment,
       },
       {
+        id: "resturamt-money",
         title: "ההכנסות החודשיות במסעדה",
         columns: colMoney,
         rows: rowMoney,
       },
+      {
+        id: "resturamt-money-per-day",
+        title: "הכנסות במסעדה לפי תאריך",
+        columns: colMoneyPerDay,
+        rows: rowMoneyPerDay,
+      },
     ];
-  }, [orders]);
+  }, [orders, ordersPerDay]);
 
   useEffect(() => {
     const userType = activeUser?.attributes?.role || "";
@@ -394,7 +507,10 @@ const Reports = () => {
       })
       .catch((err) => console.error("error get all orders", err))
       .finally(() => setIsLoading(false));
+  }, []);
 
+  useEffect(() => {
+    const userType = activeUser?.attributes?.role || "";
     getHistoryOrders(activeUser?.id || "", userType, time as any)
       .then((res: getHistoryOrdersType[] | null) => {
         if (res) {
@@ -405,30 +521,21 @@ const Reports = () => {
       })
       .catch((err) => console.error("error get all orders", err))
       .finally(() => setIsLoading(false));
-  }, []);
-
-  const tableData = () => {
-    const colRating: GridColDef[] = [
-      { field: "id", headerName: "#", type: "string", headerAlign: "center" },
-    ];
-    const rowRating: GridRowsProp = [];
-
-    return {
-      title: "הכנסה לפי תאריך",
-      columns: colRating,
-      rows: rowRating,
-    };
-  };
+  }, [time]);
 
   return (
     <>
       <div className="c-reports-container">
         {tablesStructure?.length
           ? tablesStructure.map((tableStructure, index) => (
-              <DataGridTable key={index} tableData={tableStructure} />
+              <DataGridTable
+                key={index}
+                tableData={tableStructure}
+                time={time}
+                setTime={setTime}
+              />
             ))
           : null}
-        <DataGridTable tableData={tableData()} />
       </div>
       {isLoading ? (
         <CircularProgress
