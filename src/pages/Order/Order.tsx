@@ -1,4 +1,5 @@
 import React, { FC, useContext, useEffect, useState, useRef } from "react";
+import { isEqual } from "lodash";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -68,7 +69,14 @@ const Order: FC<props> = ({ socket }) => {
     getOrders(activeUser?.id || undefined, userType)
       .then((res) => {
         console.log("getOrders res:", res);
-        setOrderData(res);
+        if (!orderData || !isEqual(orderData, res)) {
+          console.log(
+            "enter the render order pollingg",
+            !orderData || !isEqual(orderData, res)
+          );
+
+          setOrderData(res);
+        }
       })
       .catch((err) => console.error("error while getOrders :", err))
       .finally(() => setIsLoading(false));
@@ -122,6 +130,8 @@ const Order: FC<props> = ({ socket }) => {
     userId: string | undefined,
     tableNumber: number | undefined
   ) => {
+    getOrdersRequset();
+
     //publish order created!
     // socket?.emit(SocketEmitMessage.ORDER_UPDATE, {
     //   orderId,
