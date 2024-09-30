@@ -148,7 +148,7 @@ export interface getOrdersType {
 }
 
 export const getOrders = async (
-  userId: string,
+  userId: string | undefined,
   userType: "client" | "worker" | "manager"
 ): Promise<getOrdersType[] | null> => {
   try {
@@ -162,8 +162,8 @@ export const getOrders = async (
     const orderQuery: Parse.Query = new Parse.Query("Order");
     if (userType === "client") {
       // orderQuery.equalTo("userId", userId);
-      const tableNumber = localStorage.getItem("tableNumber");
-      orderQuery.equalTo("tableNumber", Number(tableNumber));
+      // const tableNumber = localStorage.getItem("tableNumber");
+      // orderQuery.equalTo("tableNumber", Number(tableNumber));
     } else if (!userType && !userId) {
       const tableNumber = localStorage.getItem("tableNumber");
       orderQuery.equalTo("tableNumber", Number(tableNumber));
@@ -175,7 +175,7 @@ export const getOrders = async (
     const orderResults = await orderQuery.find();
     console.log(" results :", orderResults);
     let orderWithMenus: any[];
-    if (userType === "client") {
+    if (userType === "client" || !userId) {
       const clientOrderResults = orderResults?.filter(
         (orderResult) => orderResult.attributes?.userId?.id === userId
       );

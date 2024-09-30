@@ -35,40 +35,40 @@ const App = () => {
     ? userRoutes[activeUser.attributes.role as keyof typeof userRoutes]
     : userRoutes["guest"];
 
-  useEffect(() => {
-    socket.connect();
-    socket.on(SocketMessage.ORDER_UPDATED, (payload) => {
-      console.log("Message received in MAIN PAGE. ", payload);
-      // Process the message here
-      const messageUserId = payload?.userId;
-      const messageTableNumber = payload?.tableNumber;
-      const orderId = payload?.orderId;
-      const status = payload?.status;
-      if (
-        messageFilter(
-          activeUser?.attributes?.role,
-          activeUser?.id,
-          messageUserId,
-          messageTableNumber,
-          status
-        ) &&
-        orderId
-      ) {
-        // console.log("inside if - MAIN PAGE. ", payload);
+  // useEffect(() => {
+  //   socket.connect();
+  //   socket.on(SocketMessage.ORDER_UPDATED, (payload) => {
+  //     console.log("Message received in MAIN PAGE. ", payload);
+  //     // Process the message here
+  //     const messageUserId = payload?.userId;
+  //     const messageTableNumber = payload?.tableNumber;
+  //     const orderId = payload?.orderId;
+  //     const status = payload?.status;
+  //     if (
+  //       messageFilter(
+  //         activeUser?.attributes?.role,
+  //         activeUser?.id,
+  //         messageUserId,
+  //         messageTableNumber,
+  //         status
+  //       ) &&
+  //       orderId
+  //     ) {
+  //       // console.log("inside if - MAIN PAGE. ", payload);
 
-        setAlert({ isDisplay: true, id: orderId });
-        timeoutRef.current = setTimeout(() => {
-          setAlert({ isDisplay: false });
-        }, 7000);
-        // fetchUpdatedOrderData(orderId);
-      }
-    });
+  //       setAlert({ isDisplay: true, id: orderId });
+  //       timeoutRef.current = setTimeout(() => {
+  //         setAlert({ isDisplay: false });
+  //       }, 7000);
+  //       // fetchUpdatedOrderData(orderId);
+  //     }
+  //   });
 
-    return () => {
-      clearTimeout(timeoutRef.current);
-      socket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     clearTimeout(timeoutRef.current);
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   // useEffect(() => {
   //   console.log(

@@ -61,10 +61,11 @@ const Order: FC<props> = ({ socket }) => {
   const [tableNumber, setTableNumber] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<NodeJS.Timer>();
 
   const getOrdersRequset = () => {
     const userType = activeUser?.attributes?.role || "";
-    getOrders(activeUser?.id || "", userType)
+    getOrders(activeUser?.id || undefined, userType)
       .then((res) => {
         console.log("getOrders res:", res);
         setOrderData(res);
@@ -77,44 +78,44 @@ const Order: FC<props> = ({ socket }) => {
     setIsLoading(true);
     //request for order of the current user
     getOrdersRequset();
-    // const intervalId: NodeJS.Timer = setInterval(() => {
-    //   if (
-    //     (localStorage.getItem("tableNumber") &&
-    //       (activeUser?.attributes?.role === "client" ||
-    //         !activeUser?.attributes?.role)) ||
-    //     activeUser?.attributes?.role === "manger" ||
-    //     activeUser?.attributes?.role === "worker"
-    //   ) {
-    //     setIsLoading(true);
-    //     getOrdersRequset();
-    //   }
-    // }, 60000);
-    // return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    socket?.on(SocketMessage.ORDER_UPDATED, (payload) => {
-      console.log("Message received in order page. ", payload);
-      // Process the message here
-      const messageUserId = payload?.userId;
-      const messageTableNumber = payload?.tableNumber;
-      const orderId = payload?.orderId;
-      const status = payload?.status;
+    timerRef.current = setInterval(() => {
       if (
-        messageFilter(
-          activeUser?.attributes?.role,
-          activeUser?.id,
-          messageUserId,
-          messageTableNumber,
-          status
-        ) &&
-        orderId
+        (localStorage.getItem("tableNumber") &&
+          (activeUser?.attributes?.role === "client" ||
+            !activeUser?.attributes?.role)) ||
+        activeUser?.attributes?.role === "manger" ||
+        activeUser?.attributes?.role === "worker"
       ) {
-        console.log("went throght the if - before getOrdersRequset()");
+        setIsLoading(true);
         getOrdersRequset();
       }
-    });
+    }, 60000);
+    return () => clearInterval(timerRef.current);
   }, []);
+
+  // useEffect(() => {
+  //   socket?.on(SocketMessage.ORDER_UPDATED, (payload) => {
+  //     console.log("Message received in order page. ", payload);
+  //     // Process the message here
+  //     const messageUserId = payload?.userId;
+  //     const messageTableNumber = payload?.tableNumber;
+  //     const orderId = payload?.orderId;
+  //     const status = payload?.status;
+  //     if (
+  //       messageFilter(
+  //         activeUser?.attributes?.role,
+  //         activeUser?.id,
+  //         messageUserId,
+  //         messageTableNumber,
+  //         status
+  //       ) &&
+  //       orderId
+  //     ) {
+  //       console.log("went throght the if - before getOrdersRequset()");
+  //       getOrdersRequset();
+  //     }
+  //   });
+  // }, []);
 
   const emitOrderUpdate = (
     orderId: string,
@@ -122,12 +123,12 @@ const Order: FC<props> = ({ socket }) => {
     tableNumber: number | undefined
   ) => {
     //publish order created!
-    socket?.emit(SocketEmitMessage.ORDER_UPDATE, {
-      orderId,
-      userId,
-      tableNumber,
-      status: SocketMessage.ORDER_UPDATED,
-    });
+    // socket?.emit(SocketEmitMessage.ORDER_UPDATE, {
+    //   orderId,
+    //   userId,
+    //   tableNumber,
+    //   status: SocketMessage.ORDER_UPDATED,
+    // });
   };
 
   //clear local storage +

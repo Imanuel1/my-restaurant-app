@@ -19,7 +19,7 @@ import { SocketHookType } from "../../components/types/socket.type";
 
 type props = {
   socket: SocketHookType | null;
-}
+};
 
 const Payment: React.FC<props> = ({ socket }) => {
   const [value, setValue] = useState<string>("Bit");
@@ -40,7 +40,7 @@ const Payment: React.FC<props> = ({ socket }) => {
       console.log("is history created ?? :", isHistoryCreated);
       if (isHistoryCreated) {
         //unsubsribe from websocket
-        socket && socket.disconnect();
+        // socket && socket.disconnect();
         localStorage.removeItem("tableNumber");
       }
       getCurrentOrder();
@@ -51,7 +51,7 @@ const Payment: React.FC<props> = ({ socket }) => {
     setIsLoading(true);
     //request for order of the current user
     const userType = activeUser?.attributes?.role || "";
-    getOrders(activeUser?.id || "", userType)
+    getOrders(activeUser?.id || undefined, userType)
       .then((res) => {
         setOrderData(res);
         console.log("res res order:", res);
