@@ -74,7 +74,7 @@ export const parseSignUp = async (
     user.set("birthday", convertDateFormat(birthday));
 
     const createdUser = await user.signUp();
-    console.error(
+    console.warn(
       `Success! User ${createdUser.getUsername()} was successfully created!`
     );
     const acl = new Parse.ACL();
@@ -106,6 +106,7 @@ export const parseSignUp = async (
 
     return createdUser;
   } catch (error) {
+    console.error("error while creating new user", error);
     return null;
   }
 };

@@ -76,7 +76,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     birthday: string;
     password: string;
   }) => {
-    const newUser = await parseSignUp(name, email, password, birthday);
+    const newUser = await parseSignUp(name, email, birthday, password);
     console.log("this is new user :", newUser);
 
     setActiveUser(newUser);
